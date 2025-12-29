@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - NewTab</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            background: #f5f5f5;
+            min-height: 100vh;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding-top: 60px;
+            /* Space for sticky navbar */
+        }
+
+        .admin-container {
+            width: 950px;
+            margin: 40px auto;
+            text-align: left;
+            background: #fff;
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            color: #333;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #1a1a2e;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+        h3 {
+            margin-top: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            color: #555;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+            color: #333;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #4caf50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
+        }
+
+        input[type="text"]::placeholder {
+            color: #999;
+        }
+
+        .link-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .link-row input {
+            flex: 1;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+        }
+
+        .btn-secondary {
+            background: #666;
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: #555;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        .paste-area {
+            border: 2px dashed #ccc;
+            padding: 25px;
+            text-align: center;
+            color: #888;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border-radius: 8px;
+            background: #fafafa;
+            transition: all 0.3s ease;
+        }
+
+        .paste-area:hover,
+        .paste-area.active {
+            border-color: #4caf50;
+            background: rgba(76, 175, 80, 0.05);
+        }
+
+        table.system-list {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table.system-list th {
+            text-align: left;
+            padding: 12px;
+            background: #f8f8f8;
+            color: #666;
+            font-weight: 500;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        table.system-list td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        table.system-list img {
+            width: 45px;
+            height: 45px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        table.system-list a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        table.system-list a:hover {
+            text-decoration: underline;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .checkbox-group label {
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #555;
+            cursor: pointer;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #4caf50;
+        }
+
+        .page-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .page-item {
+            background: #eee;
+            padding: 8px 14px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .page-item.default {
+            background: #d4edda;
+            border: 1px solid #28a745;
+        }
+
+        .inline-form {
+            display: inline;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #eee;
+            margin: 40px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar" style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000;">
+        <div class="nav-links">
+            {% for page in pages %}
+            <a href="/?page={{ page.id }}" class="nav-link">{{ page.name }}</a>
+            {% endfor %}
+            <a href="{{ url_for('admin') }}" class="nav-link active">Admin</a>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        <!-- ========== CARD FORM ========== -->
+        <h2 id="formTitle">Add New Card</h2>
+        <form id="systemForm" action="{{ url_for('add_system') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Card Name</label>
+                <input type="text" name="name" id="nameInput" required>
+            </div>
+
+            <div class="form-group">
+                <label>Image (Upload new to replace)</label>
+                <input type="file" name="image_file" accept="image/*" id="fileInput">
+                <div class="paste-area" id="pasteArea" tabindex="0">
+                    Click here and Paste (Ctrl+V) an image, or Drag & Drop
+                </div>
+                <input type="hidden" name="pasted_image" id="pastedImage">
+                <div id="preview" style="margin-top: 10px;"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Card Back Color</label>
+                <input type="color" name="back_color" id="colorInput" value="#000000"
+                    style="width: 100px; height: 40px; padding: 0; border: none;">
+            </div>
+
+            <div class="form-group">
+                <label>Assign to Pages</label>
+                <div class="checkbox-group" id="pagesCheckboxes">
+                    {% for page in pages %}
+                    <label>
+                        <input type="checkbox" name="assigned_pages[]" value="{{ page.id }}" {% if page.id=='default'
+                            %}checked{% endif %}>
+                        {{ page.name }}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Links</label>
+                <div id="linksContainer">
+                    <div class="link-row">
+                        <input type="text" name="link_text[]" placeholder="Link Text (e.g. Jira)" required>
+                        <input type="text" name="link_url[]" placeholder="URL (e.g. https://...)" required>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-secondary btn-small" onclick="addLinkRow()">+ Add Another
+                    Link</button>
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn">Add Card</button>
+            <button type="button" class="btn btn-secondary" id="cancelBtn" onclick="cancelEdit()"
+                style="display: none; background-color: #777;">Cancel Edit</button>
+        </form>
+
+        <hr style="margin: 40px 0;">
+
+        <!-- ========== CARDS LIST ========== -->
+        <h2 style="display: flex; justify-content: space-between; align-items: center;">
+            Existing Cards
+            <input type="text" id="cardFilter" placeholder="Filter cards..."
+                style="font-size: 14px; padding: 8px 12px; width: 250px; font-weight: normal;">
+        </h2>
+        <table class="system-list" id="cardsTable">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Pages</th>
+                    <th>Links</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="cardsBody">
+                {% for system in systems %}
+                <tr class="card-row"
+                    data-search="{{ system.name|lower }} {{ system.pages|join(' ')|lower }} {% for l in system.links %}{{ l.text|lower }} {{ l.url|lower }} {% endfor %}">
+                    <td><img src="{{ url_for('static', filename='img/' + system.image) }}"
+                            onerror="this.src='{{ url_for('static', filename='img/generic.png') }}'"></td>
+                    <td>{{ system.name }}</td>
+                    <td>
+                        {% for pid in system.pages %}
+                        <span
+                            style="background: #eee; padding: 2px 6px; border-radius: 3px; margin-right: 3px; font-size: 12px;">{{
+                            pid }}</span>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for link in system.links %}
+                        <div><a href="{{ link.url }}" target="_blank">{{ link.text }}</a></div>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <button class="btn btn-secondary edit-btn btn-small" data-id="{{ loop.index0 }}"
+                            data-name="{{ system.name }}" data-color="{{ system.back_color|default('#000000') }}"
+                            data-links='{{ system.links|tojson|e }}'
+                            data-pages='{{ system.pages|tojson|e }}'>Edit</button>
+                        <form action="{{ url_for('delete_system', id=loop.index0) }}" method="POST" class="inline-form"
+                            onsubmit="return confirm('Delete this card?');">
+                            <button type="submit" class="btn btn-danger btn-small">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div id="pagination" style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;"></div>
+
+        <hr style="margin: 40px 0;">
+
+        <!-- ========== PAGE MANAGEMENT ========== -->
+        <h2>Manage Pages</h2>
+        <form action="{{ url_for('add_page') }}" method="POST" style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <input type="text" name="page_name" placeholder="New page name (e.g. DevOps)" required
+                style="flex: 1; margin: 0;">
+            <button type="submit" class="btn btn-small">Add Page</button>
+        </form>
+        <div class="page-list">
+            {% for page in pages %}
+            <div class="page-item {% if page.id == 'default' %}default{% endif %}">
+                <span>{{ page.name }}</span>
+                {% if page.id != 'default' %}
+                <form action="{{ url_for('delete_page', page_id=page.id) }}" method="POST" class="inline-form"
+                    onsubmit="return confirm('Delete page {{ page.name }}?');">
+                    <button type="submit" class="btn btn-danger btn-small" style="padding: 2px 6px;">×</button>
+                </form>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <hr>
+
+        <!-- ========== SEARCH SETTINGS ========== -->
+        <h2>Search Bar Settings</h2>
+        <form action="{{ url_for('update_settings') }}" method="POST"
+            style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center;">
+            <label style="display: flex; align-items: center; gap: 8px; margin: 0;">
+                <input type="checkbox" name="search_enabled" {% if settings.search_enabled %}checked{% endif %}
+                    style="width: 20px; height: 20px; accent-color: #4caf50;">
+                Enable Search Bar
+            </label>
+            <input type="text" name="search_base_url" value="{{ settings.search_base_url }}"
+                placeholder="Search Base URL (e.g. http://server/?search=)"
+                style="flex: 1; min-width: 300px; margin: 0;">
+            <button type="submit" class="btn btn-small">Save Settings</button>
+        </form>
+    </div>
+
+    <script>
+        function addLinkRow(text = '', url = '') {
+            const container = document.getElementById('linksContainer');
+            const div = document.createElement('div');
+            div.className = 'link-row';
+            div.innerHTML = `
+                <input type="text" name="link_text[]" placeholder="Link Text" value="${text}" required>
+                <input type="text" name="link_url[]" placeholder="URL" value="${url}" required>
+                <button type="button" class="btn btn-danger btn-small" onclick="this.parentElement.remove()">×</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function editSystem(btn) {
+            const id = btn.dataset.id;
+            const name = btn.dataset.name;
+            const color = btn.dataset.color;
+            const links = JSON.parse(btn.dataset.links);
+            const pages = JSON.parse(btn.dataset.pages);
+
+            document.getElementById('formTitle').scrollIntoView({ behavior: 'smooth' });
+
+            document.getElementById('formTitle').innerText = 'Edit Card';
+            document.getElementById('submitBtn').innerText = 'Update Card';
+            document.getElementById('cancelBtn').style.display = 'inline-block';
+
+            const form = document.getElementById('systemForm');
+            form.action = '/admin/update/' + id;
+
+            document.getElementById('nameInput').value = name;
+            document.getElementById('colorInput').value = color;
+
+            // Set page checkboxes
+            document.querySelectorAll('#pagesCheckboxes input[type="checkbox"]').forEach(cb => {
+                cb.checked = pages.includes(cb.value);
+            });
+
+            // Fill links
+            const container = document.getElementById('linksContainer');
+            container.innerHTML = '';
+            if (links && links.length > 0) {
+                links.forEach(link => addLinkRow(link.text, link.url));
+            } else {
+                addLinkRow();
+            }
+        }
+
+        function cancelEdit() {
+            document.getElementById('formTitle').innerText = 'Add New Card';
+            document.getElementById('submitBtn').innerText = 'Add Card';
+            document.getElementById('cancelBtn').style.display = 'none';
+
+            const form = document.getElementById('systemForm');
+            form.action = "{{ url_for('add_system') }}";
+            form.reset();
+
+            // Reset checkboxes to default only
+            document.querySelectorAll('#pagesCheckboxes input[type="checkbox"]').forEach(cb => {
+                cb.checked = cb.value === 'default';
+            });
+
+            document.getElementById('linksContainer').innerHTML = '';
+            addLinkRow();
+            document.getElementById('preview').innerHTML = '';
+            document.getElementById('pastedImage').value = '';
+            document.getElementById('pasteArea').innerText = "Click here and Paste (Ctrl+V) an image, or Drag & Drop";
+        }
+
+        // ========== FILTER & PAGINATION ==========
+        const ITEMS_PER_PAGE = 10;
+        let currentPage = 1;
+        let allRows = [];
+        let filteredRows = [];
+
+        function initPagination() {
+            allRows = Array.from(document.querySelectorAll('.card-row'));
+            filteredRows = allRows;
+            renderPage();
+        }
+
+        function filterCards(query) {
+            const q = query.toLowerCase();
+            filteredRows = allRows.filter(row => row.dataset.search.includes(q));
+            currentPage = 1;
+            renderPage();
+        }
+
+        function renderPage() {
+            // Hide all rows
+            allRows.forEach(row => row.style.display = 'none');
+
+            // Show filtered rows for current page
+            const start = (currentPage - 1) * ITEMS_PER_PAGE;
+            const end = start + ITEMS_PER_PAGE;
+            filteredRows.slice(start, end).forEach(row => row.style.display = '');
+
+            renderPaginationControls();
+        }
+
+        function renderPaginationControls() {
+            const totalPages = Math.ceil(filteredRows.length / ITEMS_PER_PAGE);
+            const container = document.getElementById('pagination');
+            container.innerHTML = '';
+
+            if (totalPages <= 1) return;
+
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-small' + (i === currentPage ? '' : ' btn-secondary');
+                btn.innerText = i;
+                btn.onclick = () => { currentPage = i; renderPage(); };
+                container.appendChild(btn);
+            }
+        }
+
+        // Edit button listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', () => editSystem(btn));
+            });
+
+            // Init filter
+            const filterInput = document.getElementById('cardFilter');
+            if (filterInput) {
+                filterInput.addEventListener('input', (e) => filterCards(e.target.value));
+            }
+
+            // Init pagination
+            initPagination();
+        });
+
+        // Paste Image Logic
+        const pasteArea = document.getElementById('pasteArea');
+        const preview = document.getElementById('preview');
+        const hiddenInput = document.getElementById('pastedImage');
+
+        pasteArea.addEventListener('paste', (e) => {
+            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+            for (let item of items) {
+                if (item.kind === 'file' && item.type.startsWith('image/')) {
+                    handleImage(item.getAsFile());
+                }
+            }
+        });
+
+        pasteArea.addEventListener('dragover', (e) => { e.preventDefault(); pasteArea.classList.add('active'); });
+        pasteArea.addEventListener('dragleave', () => pasteArea.classList.remove('active'));
+        pasteArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            pasteArea.classList.remove('active');
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                handleImage(e.dataTransfer.files[0]);
+            }
+        });
+
+        function handleImage(blob) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                preview.innerHTML = `<img src="${event.target.result}" style="max-height: 100px; border: 1px solid #ccc;">`;
+                hiddenInput.value = event.target.result;
+                pasteArea.innerText = "Image captured!";
+            };
+            reader.readAsDataURL(blob);
+        }
+    </script>
+</body>
+
+</html>

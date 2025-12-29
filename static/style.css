@@ -1,0 +1,232 @@
+		body {
+			margin: 0;
+			text-align: center;
+			display: block;
+			font-size: 15px;
+			font-family: Sans-Serif;
+			background-color: #f0f0f0;
+			/* Light background for contrast */
+		}
+
+		.navbar {
+			background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+			padding: 15px 0;
+			display: flex;
+			justify-content: center;
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+		}
+
+		.nav-links {
+			display: flex;
+			gap: 8px;
+			padding: 8px;
+			background: rgba(255, 255, 255, 0.05);
+			border-radius: 50px;
+			backdrop-filter: blur(10px);
+		}
+
+		.nav-link {
+			color: #e0e0e0;
+			text-decoration: none;
+			padding: 10px 20px;
+			border-radius: 25px;
+			font-size: 14px;
+			font-weight: 500;
+			transition: all 0.3s ease;
+			background: transparent;
+		}
+
+		.nav-link:hover {
+			background: rgba(255, 255, 255, 0.15);
+			color: #fff;
+			transform: translateY(-2px);
+		}
+
+		.nav-link.active {
+			background: linear-gradient(135deg, #4caf50, #45a049);
+			color: #fff;
+			box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+		}
+
+		.nav-link.admin-link {
+			background: rgba(255, 255, 255, 0.1);
+			border: 1px solid rgba(255, 255, 255, 0.2);
+		}
+
+		.nav-link.admin-link:hover {
+			background: rgba(255, 255, 255, 0.2);
+		}
+
+		.logo {
+			margin-top: 40px;
+			margin-bottom: 40px;
+			height: 200px;
+		}
+
+		.grid-container {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0;
+			width: fit-content;
+			max-width: 1400px;
+			/* 7 * 200px */
+			margin: 50px auto 100px auto;
+			justify-content: center;
+		}
+
+		.grid-container>div {
+			width: 200px;
+		}
+
+		/* Responsive adjustments: drop columns on smaller screens if needed */
+		@media (max-width: 1450px) {
+			.grid-container {
+				grid-template-columns: repeat(auto-fit, 200px);
+				width: 95%;
+			}
+		}
+
+		.footer {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			width: 100%;
+			text-align: center;
+			background: #fff;
+			padding: 10px 0;
+			border-top: 1px solid #ccc;
+		}
+
+		.flip-card {
+			background-color: transparent;
+			width: 200px;
+			height: 150px;
+			perspective: 1000px;
+		}
+
+		.flip-card-inner {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			text-align: center;
+			transition: transform 0.3s;
+			transform-style: preserve-3d;
+			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+			border-radius: 0;
+		}
+
+		.flip-card:hover .flip-card-inner {
+			transform: rotateY(180deg);
+		}
+
+		.flip-card-front,
+		.flip-card-back {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			-webkit-backface-visibility: hidden;
+			backface-visibility: hidden;
+			border-radius: 0;
+		}
+
+		.flip-card-front {
+			background-color: #11161F;
+			color: black;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.flip-card-front img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			/* Zoom to fill */
+		}
+
+		.flip-card-back {
+			color: white;
+			transform: rotateY(180deg);
+			display: flex;
+			/* Changed from table to flex */
+			justify-content: center;
+			align-items: center;
+			background-color: #000;
+			flex-direction: column;
+			/* Allow multiple links to stack */
+		}
+
+		.element {
+			font-size: 20px;
+		}
+
+		.element a {
+			color: #fff;
+			display: block;
+			/* Stack links */
+			margin: 5px 0;
+			text-decoration: none;
+			/* No underline */
+		}
+
+		.search-container {
+			padding: 30px 0 0 0;
+			display: flex;
+			/* Use flexbox for alignment */
+			justify-content: center;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.search-box {
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			font-size: 16px;
+			width: 300px;
+			background-image: url("img/searchbox.png");
+			/* adjusted path for css file relative to static? No, usually static is root. Wait, CSS is in static/. So img/ is sibling. */
+			background-size: cover;
+			background-position: center;
+		}
+
+		/* Fix for bg image path in CSS served from static/ */
+		/* If css is in /static/style.css, and img is in /static/img/searchbox.png, then url should be img/searchbox.png */
+
+		.search-box:focus {
+			background-image: none;
+		}
+
+		.search-box:not(:placeholder-shown) {
+			background-image: none;
+		}
+
+		.search-button {
+			background-color: #4caf50;
+			color: #fff;
+			border: none;
+			padding: 10px 15px;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 16px;
+		}
+
+		.search-button:hover {
+			background-color: #45a049;
+		}
+
+		.nav-button {
+			background-color: #000;
+			color: #fff;
+			border: none;
+			padding: 10px 15px;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 16px;
+			text-decoration: none;
+		}
+
+		.nav-button.active {
+			background-color: #4caf50;
+		}

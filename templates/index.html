@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<title>{{ current_page.name }} - NewTab</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+	<nav class="navbar">
+		<div class="nav-links">
+			{% for page in pages %}
+			<a href="/?page={{ page.id }}" class="nav-link {% if page.id == current_page.id %}active{% endif %}">{{
+				page.name }}</a>
+			{% endfor %}
+			<a href="{{ url_for('admin') }}" class="nav-link admin-link">Admin</a>
+		</div>
+	</nav>
+
+	{% if settings.search_enabled %}
+	<div class="search-container">
+		<button id="searchButton" class="search-button">Search</button>
+		<input type="text" id="searchinput" class="search-box" placeholder=" ">
+	</div>
+
+	<script>
+		var searchBaseUrl = '{{ settings.search_base_url }}';
+		document.getElementById('searchButton').addEventListener('click', function () {
+			var query = document.getElementById('searchinput').value;
+			window.location.href = searchBaseUrl + encodeURIComponent(query);
+		});
+
+		document.getElementById('searchinput').addEventListener('keyup', function (event) {
+			if (event.key == 'Enter') {
+				var query = document.getElementById('searchinput').value;
+				window.location.href = searchBaseUrl + encodeURIComponent(query);
+			}
+		});
+	</script>
+	{% endif %}
+
+	{% set item_count = systems|length %}
+	<div class="grid-container" id="gridContainer" data-count="{{ item_count }}">
+		{% for system in systems %}
+		{% set one_link = system.links|length == 1 %}
+		{% set many_links = system.links|length > 6 %}
+		{% set main_link = system.links[0].url if one_link else '#' %}
+
+		<div {% if one_link %}onclick="window.open('{{ main_link }}')" style="cursor: pointer;" {% endif %}>
+			<div class="flip-card">
+				<div class="flip-card-inner">
+					<div class="flip-card-front">
+						<img src="{{ url_for('static', filename='img/' + system.image) }}" alt="{{ system.name }}"
+							onerror="this.src='{{ url_for('static', filename='img/generic.png') }}'">
+					</div>
+					<div class="flip-card-back" style="background-color: {{ system.back_color|default('#000000') }};">
+						{% if one_link %}
+						<div class="element">{{ system.name }}</div>
+						{% elif many_links %}
+						<div class="paginated-links" data-page="0">
+							<button class="link-nav prev"
+								onclick="event.stopPropagation(); paginateLinks(this, -1);">&#8249;</button>
+							<div class="links-container">
+								{% for link in system.links %}
+								<a href="{{ link.url }}" target="_blank" class="paginated-link"
+									data-index="{{ loop.index0 }}" onclick="event.stopPropagation();">{{ link.text
+									}}</a>
+								{% endfor %}
+							</div>
+							<button class="link-nav next"
+								onclick="event.stopPropagation(); paginateLinks(this, 1);">&#8250;</button>
+						</div>
+						{% else %}
+						<div class="element">
+							{% for link in system.links %}
+							<a href="{{ link.url }}" target="_blank" style="font-size: 14px;">{{ link.text }}</a>
+							{% endfor %}
+						</div>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+
+	<script>
+		// Calculate optimal columns for balanced grid layout
+		function getOptimalColumns(count) {
+			if (count <= 7) return count;
+
+			// For larger counts, find best column count for balanced rows
+			// Logic: prefer 4-6 columns, ensure last row has at least col-2 items
+
+			// First check for perfect divisors (prefer smaller for more rows)
+			const preferredCols = [4, 5, 6, 3, 7];
+			for (const cols of preferredCols) {
+				if (count % cols === 0) return cols;
+			}
+
+			// For ugly numbers, find columns where last row is nearly full
+			// Last row should have at least (cols - 2) items
+			let bestCols = 4;
+			let bestScore = -1;
+
+			for (let cols = 4; cols <= 7; cols++) {
+				const remainder = count % cols;
+				if (remainder === 0) {
+					return cols; // Perfect fit
+				}
+				// Score: how close is remainder to cols (higher is better)
+				const score = remainder;
+				if (remainder >= cols - 2 && score > bestScore) {
+					bestScore = score;
+					bestCols = cols;
+				}
+			}
+
+			// Examples of results:
+			// 11: 4 cols → 4,4,3 (remainder 3, >= 4-2=2) ✓
+			// 13: 5 cols → 5,5,3 (remainder 3, >= 5-2=3) ✓
+			// 17: 6 cols → 6,6,5 (remainder 5, >= 6-2=4) ✓
+
+			return bestCols;
+		}
+
+		document.addEventListener('DOMContentLoaded', () => {
+			const grid = document.getElementById('gridContainer');
+			if (grid) {
+				const count = parseInt(grid.dataset.count) || 0;
+				const cols = getOptimalColumns(count);
+				grid.style.maxWidth = (cols * 200) + 'px';
+			}
+		});
+	</script>
+
+	<style>
+		.paginated-links {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			width: 100%;
+			height: 100%;
+			padding: 5px;
+		}
+
+		.links-container {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 3px;
+			flex: 1;
+			overflow: hidden;
+		}
+
+		.paginated-link {
+			color: white;
+			text-decoration: none;
+			font-size: 12px;
+			padding: 2px 5px;
+			display: none;
+		}
+
+		.paginated-link.visible {
+			display: block;
+		}
+
+		.link-nav {
+			background: rgba(255, 255, 255, 0.2);
+			border: none;
+			color: white;
+			font-size: 20px;
+			cursor: pointer;
+			padding: 5px 8px;
+			border-radius: 4px;
+			transition: background 0.2s;
+		}
+
+		.link-nav:hover {
+			background: rgba(255, 255, 255, 0.4);
+		}
+
+		.link-nav:disabled {
+			opacity: 0.3;
+			cursor: default;
+		}
+	</style>
+
+	<script>
+		function paginateLinks(btn, dir) {
+			const container = btn.closest('.paginated-links');
+			const links = container.querySelectorAll('.paginated-link');
+			let page = parseInt(container.dataset.page) || 0;
+			const perPage = 6;
+			const totalPages = Math.ceil(links.length / perPage);
+
+			page = Math.max(0, Math.min(totalPages - 1, page + dir));
+			container.dataset.page = page;
+
+			links.forEach((link, i) => {
+				const start = page * perPage;
+				const end = start + perPage;
+				link.classList.toggle('visible', i >= start && i < end);
+			});
+
+			container.querySelector('.prev').disabled = (page === 0);
+			container.querySelector('.next').disabled = (page >= totalPages - 1);
+		}
+
+		// Initialize all paginated link containers
+		document.addEventListener('DOMContentLoaded', () => {
+			document.querySelectorAll('.paginated-links').forEach(container => {
+				const links = container.querySelectorAll('.paginated-link');
+				links.forEach((link, i) => {
+					if (i < 6) link.classList.add('visible');
+				});
+				const totalPages = Math.ceil(links.length / 6);
+				container.querySelector('.prev').disabled = true;
+				container.querySelector('.next').disabled = (totalPages <= 1);
+			});
+		});
+	</script>
+
+	<div class="footer">
+		You can Show your love to our work by buying a tokens to your closest DevOps team member
+	</div>
+
+</body>
+
+</html>
