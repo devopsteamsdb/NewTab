@@ -1,7 +1,8 @@
 {
     "settings": {
         "search_enabled": true,
-        "search_base_url": "https://www.google.com/search?q="
+        "search_base_url": "https://www.google.com/search?q=",
+        "footer_text": "You can show your love \u2665 to our work by buying a tokens to your closest DevOps team member \u2665"
     },
     "pages": [
         {
@@ -330,34 +331,6 @@
             ]
         },
         {
-            "name": "dsadsadsa",
-            "image": "a37ac12b-2c87-4204-bf72-98443a413862_windows-8-forests-wallpapers-12.jpg",
-            "back_color": "#000000",
-            "links": [
-                {
-                    "text": "aaa",
-                    "url": "https://a"
-                }
-            ],
-            "pages": [
-                "default"
-            ]
-        },
-        {
-            "name": "dsadsa",
-            "image": "bd63b56c-e453-45cf-a2c5-be179809d3fd_windows-8-forests-wallpapers-12.jpg",
-            "back_color": "#000000",
-            "links": [
-                {
-                    "text": "dsadsa",
-                    "url": "https://google.com"
-                }
-            ],
-            "pages": [
-                "default"
-            ]
-        },
-        {
             "name": "dsadasdsadas",
             "image": "generic.png",
             "back_color": "#000000",
@@ -365,6 +338,72 @@
                 {
                     "text": "link",
                     "url": "https://google.com"
+                }
+            ],
+            "pages": [
+                "default"
+            ]
+        },
+        {
+            "name": "test 123",
+            "image": "641eb5f5-c493-4f63-87af-12f7e13f6510.jpg",
+            "back_color": "#000000",
+            "links": [
+                {
+                    "text": "test",
+                    "url": "https://google.com"
+                }
+            ],
+            "pages": [
+                "default"
+            ]
+        },
+        {
+            "name": "vmware",
+            "image": "3abcc828-f7ec-47a7-ac55-8a1414c2a9bd.png",
+            "image_mode": "fit",
+            "image_size": "62",
+            "back_color": "#545454",
+            "front_color": "#092f77",
+            "links": [
+                {
+                    "text": "vmware",
+                    "url": "https://vmware.com"
+                }
+            ],
+            "pages": [
+                "default",
+                "devops"
+            ]
+        },
+        {
+            "name": "ynet",
+            "image": "e1bec797-b8a9-4f6c-8b82-d7d2430f4929.png",
+            "image_mode": "fit",
+            "image_size": "68",
+            "back_color": "#000000",
+            "front_color": "#ffffff",
+            "links": [
+                {
+                    "text": "ynet",
+                    "url": "https://ynet.co.il"
+                }
+            ],
+            "pages": [
+                "default"
+            ]
+        },
+        {
+            "name": "rabbitmq",
+            "image": "0bd4e6e2-3aa9-4a5e-b8ea-b9c3490227ae.png",
+            "image_mode": "fit",
+            "image_size": "57",
+            "back_color": "#000000",
+            "front_color": "#e6e6e6",
+            "links": [
+                {
+                    "text": "rabbit",
+                    "url": "https://rabbitmq.com"
                 }
             ],
             "pages": [
