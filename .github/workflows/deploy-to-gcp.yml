@@ -52,7 +52,7 @@ jobs:
             cat > docker-compose.yml << 'EOF'
             services:
               newtab:
-                image: "devopsteamsdb/devopsteamsdb:newtab"
+                image: "devopsteamsdb/devopsteamsdb:newtab_latest"
                 container_name: "newtab"
                 restart: unless-stopped
                 volumes:
