@@ -74,7 +74,7 @@ jobs:
             docker pull ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
             
             # Run with Docker Compose
-            docker compose up -d
+            docker-compose up -d --force-recreate
             
             # Remove old images (keep last 3)
             docker image prune -af --filter "until=72h"
