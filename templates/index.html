@@ -52,8 +52,9 @@
 		<div {% if one_link %}onclick="window.open('{{ main_link }}')" style="cursor: pointer;" {% endif %}>
 			<div class="flip-card">
 				<div class="flip-card-inner">
-					<div class="flip-card-front">
+					<div class="flip-card-front" style="background-color: {{ system.front_color|default('#11161F') }};">
 						<img src="{{ url_for('static', filename='img/' + system.image) }}" alt="{{ system.name }}"
+							style="object-fit: {{ 'contain' if system.image_mode == 'fit' else 'cover' }};{% if system.image_mode == 'fit' %} width: {{ system.image_size|default('80') }}%; height: {{ system.image_size|default('80') }}%;{% endif %}"
 							onerror="this.src='{{ url_for('static', filename='generic.png') }}'">
 					</div>
 					<div class="flip-card-back" style="background-color: {{ system.back_color|default('#000000') }};">
@@ -225,7 +226,7 @@
 	</script>
 
 	<div class="footer">
-		You can show your love ♥ to our work by buying a tokens to your closest DevOps team member ♥
+		{{ settings.footer_text|default('Made with Love by DevOps Team') }}
 	</div>
 
 </body>

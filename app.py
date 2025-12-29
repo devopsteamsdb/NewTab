@@ -55,11 +55,14 @@ def admin():
 @app.route('/admin/settings', methods=['POST'])
 def update_settings():
     data = load_data()
+    current_settings = data.get('settings', {})
     search_enabled = request.form.get('search_enabled') == 'on'
     search_base_url = request.form.get('search_base_url', '')
+    footer_text = request.form.get('footer_text', current_settings.get('footer_text', 'Made with Love by DevOps Team'))
     data['settings'] = {
         'search_enabled': search_enabled,
-        'search_base_url': search_base_url
+        'search_base_url': search_base_url,
+        'footer_text': footer_text
     }
     save_data(data)
     return redirect(url_for('admin'))
@@ -97,6 +100,9 @@ def add_system():
     
     name = request.form.get('name')
     back_color = request.form.get('back_color', '#000000')
+    image_mode = request.form.get('image_mode', 'fill')
+    front_color = request.form.get('front_color', '#11161F')
+    image_size = request.form.get('image_size', '80')
     link_texts = request.form.getlist('link_text[]')
     link_urls = request.form.getlist('link_url[]')
     assigned_pages = request.form.getlist('assigned_pages[]')
@@ -129,7 +135,10 @@ def add_system():
     data['systems'].append({
         'name': name,
         'image': image_filename,
+        'image_mode': image_mode,
+        'image_size': image_size,
         'back_color': back_color,
+        'front_color': front_color,
         'links': links,
         'pages': assigned_pages
     })
@@ -145,6 +154,9 @@ def update_system(id):
     if 0 <= id < len(systems):
         name = request.form.get('name')
         back_color = request.form.get('back_color', '#000000')
+        image_mode = request.form.get('image_mode', 'fill')
+        front_color = request.form.get('front_color', '#11161F')
+        image_size = request.form.get('image_size', '80')
         link_texts = request.form.getlist('link_text[]')
         link_urls = request.form.getlist('link_url[]')
         assigned_pages = request.form.getlist('assigned_pages[]')
@@ -178,7 +190,10 @@ def update_system(id):
         systems[id] = {
             'name': name,
             'image': image_filename,
+            'image_mode': image_mode,
+            'image_size': image_size,
             'back_color': back_color,
+            'front_color': front_color,
             'links': links,
             'pages': assigned_pages
         }

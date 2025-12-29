@@ -31,3 +31,7 @@ Thumbs.db
 # Flask
 instance/
 .webassets-cache
+
+# User data
+static/img/
+data.json

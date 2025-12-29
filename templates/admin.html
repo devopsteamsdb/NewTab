@@ -16,7 +16,7 @@
         }
 
         .admin-container {
-            width: 950px;
+            width: 1200px;
             margin: 40px auto;
             text-align: left;
             background: #fff;
@@ -24,6 +24,146 @@
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             color: #333;
+        }
+
+        .card-editor-split {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        .card-editor-form {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .card-editor-preview {
+            width: 200px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 100px;
+        }
+
+        .preview-label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .preview-card {
+            background-color: transparent;
+            width: 200px;
+            height: 150px;
+            perspective: 1000px;
+            margin: 0 auto;
+        }
+
+        .preview-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.3s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            border-radius: 0;
+        }
+
+        .preview-card:hover .preview-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .preview-front,
+        .preview-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0;
+        }
+
+        .preview-front {
+            background-color: #11161F;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .preview-front img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-back {
+            color: white;
+            transform: rotateY(180deg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+            flex-direction: column;
+            font-size: 20px;
+        }
+
+        .preview-back a {
+            color: #fff;
+            display: block;
+            margin: 5px 0;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .preview-back span {
+            font-size: 20px;
+        }
+
+        .preview-paginated {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            height: 100%;
+            padding: 5px;
+        }
+
+        .preview-links-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .preview-links-list a {
+            color: white;
+            text-decoration: none;
+            font-size: 12px;
+            padding: 2px 5px;
+        }
+
+        .preview-nav {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .preview-nav:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .preview-nav:disabled {
+            opacity: 0.3;
+            cursor: default;
         }
 
         h2 {
@@ -252,57 +392,100 @@
     <div class="admin-container">
         <!-- ========== CARD FORM ========== -->
         <h2 id="formTitle">Add New Card</h2>
-        <form id="systemForm" action="{{ url_for('add_system') }}" method="POST" enctype="multipart/form-data">
-            <div class="form-group">
-                <label>Card Name</label>
-                <input type="text" name="name" id="nameInput" required>
+
+        <div class="card-editor-split">
+            <div class="card-editor-form">
+                <form id="systemForm" action="{{ url_for('add_system') }}" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label>Card Name</label>
+                        <input type="text" name="name" id="nameInput" required oninput="updatePreview()">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Image (Upload new to replace)</label>
+                        <input type="file" name="image_file" accept="image/*" id="fileInput">
+                        <div class="paste-area" id="pasteArea" tabindex="0">
+                            Click here and Paste (Ctrl+V) an image, or Drag & Drop
+                        </div>
+                        <input type="hidden" name="pasted_image" id="pastedImage">
+                        <div id="preview" style="margin-top: 10px;"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Card Back Color</label>
+                        <input type="color" name="back_color" id="colorInput" value="#000000"
+                            style="width: 100px; height: 40px; padding: 0; border: none;" oninput="updatePreview()">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Image Display Mode</label>
+                        <select name="image_mode" id="imageModeInput"
+                            style="padding: 10px; border-radius: 8px; border: 1px solid #ddd;"
+                            onchange="updatePreview(); toggleFrontColor();">
+                            <option value="fill">Fill (cover entire card)</option>
+                            <option value="fit">Fit (show full image)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="frontColorGroup" style="display: none;">
+                        <label>Card Front Color (for fit mode)</label>
+                        <input type="color" name="front_color" id="frontColorInput" value="#11161F"
+                            style="width: 100px; height: 40px; padding: 0; border: none;" oninput="updatePreview()">
+                    </div>
+
+                    <div class="form-group" id="imageSizeGroup" style="display: none;">
+                        <label>Image Size: <span id="imageSizeValue">80</span>%</label>
+                        <input type="range" name="image_size" id="imageSizeInput" min="20" max="100" value="80"
+                            style="width: 200px;"
+                            oninput="document.getElementById('imageSizeValue').textContent = this.value; updatePreview();">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Assign to Pages</label>
+                        <div class="checkbox-group" id="pagesCheckboxes">
+                            {% for page in pages %}
+                            <label>
+                                <input type="checkbox" name="assigned_pages[]" value="{{ page.id }}" {% if
+                                    page.id=='default' %}checked{% endif %}>
+                                {{ page.name }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Links</label>
+                        <div id="linksContainer">
+                            <div class="link-row">
+                                <input type="text" name="link_text[]" placeholder="Link Text (e.g. Jira)" required
+                                    oninput="updatePreview()">
+                                <input type="text" name="link_url[]" placeholder="URL (e.g. https://...)" required>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-small" onclick="addLinkRow()">+ Add Another
+                            Link</button>
+                    </div>
+
+                    <button type="submit" class="btn" id="submitBtn">Add Card</button>
+                    <button type="button" class="btn btn-secondary" id="cancelBtn" onclick="cancelEdit()"
+                        style="display: none; background-color: #777;">Cancel Edit</button>
+                </form>
             </div>
 
-            <div class="form-group">
-                <label>Image (Upload new to replace)</label>
-                <input type="file" name="image_file" accept="image/*" id="fileInput">
-                <div class="paste-area" id="pasteArea" tabindex="0">
-                    Click here and Paste (Ctrl+V) an image, or Drag & Drop
-                </div>
-                <input type="hidden" name="pasted_image" id="pastedImage">
-                <div id="preview" style="margin-top: 10px;"></div>
-            </div>
-
-            <div class="form-group">
-                <label>Card Back Color</label>
-                <input type="color" name="back_color" id="colorInput" value="#000000"
-                    style="width: 100px; height: 40px; padding: 0; border: none;">
-            </div>
-
-            <div class="form-group">
-                <label>Assign to Pages</label>
-                <div class="checkbox-group" id="pagesCheckboxes">
-                    {% for page in pages %}
-                    <label>
-                        <input type="checkbox" name="assigned_pages[]" value="{{ page.id }}" {% if page.id=='default'
-                            %}checked{% endif %}>
-                        {{ page.name }}
-                    </label>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Links</label>
-                <div id="linksContainer">
-                    <div class="link-row">
-                        <input type="text" name="link_text[]" placeholder="Link Text (e.g. Jira)" required>
-                        <input type="text" name="link_url[]" placeholder="URL (e.g. https://...)" required>
+            <div class="card-editor-preview">
+                <div class="preview-label">Live Preview (hover to flip)</div>
+                <div class="preview-card">
+                    <div class="preview-card-inner">
+                        <div class="preview-front">
+                            <img id="previewImage" src="{{ url_for('static', filename='generic.png') }}" alt="Preview">
+                        </div>
+                        <div class="preview-back" id="previewBack">
+                            <span id="previewName">Card Name</span>
+                        </div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-secondary btn-small" onclick="addLinkRow()">+ Add Another
-                    Link</button>
             </div>
-
-            <button type="submit" class="btn" id="submitBtn">Add Card</button>
-            <button type="button" class="btn btn-secondary" id="cancelBtn" onclick="cancelEdit()"
-                style="display: none; background-color: #777;">Cancel Edit</button>
-        </form>
+        </div>
 
         <hr style="margin: 40px 0;">
 
@@ -344,6 +527,9 @@
                     <td>
                         <button class="btn btn-secondary edit-btn btn-small" data-id="{{ loop.index0 }}"
                             data-name="{{ system.name }}" data-color="{{ system.back_color|default('#000000') }}"
+                            data-image="{{ system.image }}" data-image-mode="{{ system.image_mode|default('fill') }}"
+                            data-front-color="{{ system.front_color|default('#11161F') }}"
+                            data-image-size="{{ system.image_size|default('80') }}"
                             data-links='{{ system.links|tojson|e }}'
                             data-pages='{{ system.pages|tojson|e }}'>Edit</button>
                         <form action="{{ url_for('delete_system', id=loop.index0) }}" method="POST" class="inline-form"
@@ -398,25 +584,119 @@
                 style="flex: 1; min-width: 300px; margin: 0;">
             <button type="submit" class="btn btn-small">Save Settings</button>
         </form>
+
+        <hr>
+
+        <!-- ========== FOOTER SETTINGS ========== -->
+        <h2>Footer Settings</h2>
+        <form action="{{ url_for('update_settings') }}" method="POST"
+            style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center;">
+            <input type="hidden" name="search_enabled" value="{{ 'on' if settings.search_enabled else '' }}">
+            <input type="hidden" name="search_base_url" value="{{ settings.search_base_url }}">
+            <input type="text" name="footer_text"
+                value="{{ settings.footer_text|default('Made with Love by DevOps Team') }}" placeholder="Footer text"
+                style="flex: 1; min-width: 400px; margin: 0;">
+            <button type="submit" class="btn btn-small">Save Footer</button>
+        </form>
     </div>
 
     <script>
+        // ========== LIVE PREVIEW ==========
+        let previewPage = 0;
+
+        function toggleFrontColor() {
+            const mode = document.getElementById('imageModeInput').value;
+            const isFit = mode === 'fit';
+            document.getElementById('frontColorGroup').style.display = isFit ? 'block' : 'none';
+            document.getElementById('imageSizeGroup').style.display = isFit ? 'block' : 'none';
+        }
+
+        function updatePreview() {
+            const name = document.getElementById('nameInput').value || 'Card Name';
+            const color = document.getElementById('colorInput').value || '#000000';
+            const imageMode = document.getElementById('imageModeInput').value || 'fill';
+            const frontColor = document.getElementById('frontColorInput').value || '#11161F';
+            const imageSize = document.getElementById('imageSizeInput').value || '80';
+            const previewBack = document.getElementById('previewBack');
+            const previewImage = document.getElementById('previewImage');
+            const previewFront = document.querySelector('.preview-front');
+
+            // Update front color and image mode
+            previewFront.style.backgroundColor = frontColor;
+            if (imageMode === 'fit') {
+                previewImage.style.objectFit = 'contain';
+                previewImage.style.width = imageSize + '%';
+                previewImage.style.height = imageSize + '%';
+            } else {
+                previewImage.style.objectFit = 'cover';
+                previewImage.style.width = '100%';
+                previewImage.style.height = '100%';
+            }
+
+            // Update back color
+            previewBack.style.backgroundColor = color;
+
+            // Update name or links
+            const linkInputs = document.querySelectorAll('input[name="link_text[]"]');
+            const linkTexts = Array.from(linkInputs).map(i => i.value).filter(v => v.trim());
+
+            if (linkTexts.length <= 1) {
+                previewBack.innerHTML = `<span>${name}</span>`;
+            } else if (linkTexts.length > 6) {
+                // Paginated view with arrows
+                const perPage = 6;
+                const totalPages = Math.ceil(linkTexts.length / perPage);
+                previewPage = Math.min(previewPage, totalPages - 1);
+                const start = previewPage * perPage;
+                const end = start + perPage;
+                const visibleLinks = linkTexts.slice(start, end);
+
+                let html = `<div class="preview-paginated">`;
+                html += `<button class="preview-nav" onclick="event.stopPropagation(); previewPaginate(-1);" ${previewPage === 0 ? 'disabled' : ''}>‹</button>`;
+                html += `<div class="preview-links-list">`;
+                visibleLinks.forEach(t => html += `<a href="#">${t}</a>`);
+                html += `</div>`;
+                html += `<button class="preview-nav" onclick="event.stopPropagation(); previewPaginate(1);" ${previewPage >= totalPages - 1 ? 'disabled' : ''}>›</button>`;
+                html += `</div>`;
+                previewBack.innerHTML = html;
+            } else {
+                let linksHtml = linkTexts.map(t => `<a href="#">${t}</a>`).join('');
+                previewBack.innerHTML = linksHtml;
+            }
+
+            // Update preview image if pasted
+            const pastedImage = document.getElementById('pastedImage').value;
+            if (pastedImage) {
+                previewImage.src = pastedImage;
+            }
+        }
+
+        function previewPaginate(dir) {
+            previewPage += dir;
+            updatePreview();
+        }
+
         function addLinkRow(text = '', url = '') {
             const container = document.getElementById('linksContainer');
             const div = document.createElement('div');
             div.className = 'link-row';
             div.innerHTML = `
-                <input type="text" name="link_text[]" placeholder="Link Text" value="${text}" required>
+                <input type="text" name="link_text[]" placeholder="Link Text" value="${text}" required oninput="updatePreview()">
                 <input type="text" name="link_url[]" placeholder="URL" value="${url}" required>
-                <button type="button" class="btn btn-danger btn-small" onclick="this.parentElement.remove()">×</button>
+                <button type="button" class="btn btn-danger btn-small" onclick="this.parentElement.remove(); updatePreview();">×</button>
             `;
             container.appendChild(div);
+            updatePreview();
         }
 
         function editSystem(btn) {
             const id = btn.dataset.id;
             const name = btn.dataset.name;
             const color = btn.dataset.color;
+            const image = btn.dataset.image;
+            const imageMode = btn.dataset.imageMode || 'fill';
+            const frontColor = btn.dataset.frontColor || '#11161F';
+            const imageSize = btn.dataset.imageSize || '80';
             const links = JSON.parse(btn.dataset.links);
             const pages = JSON.parse(btn.dataset.pages);
 
@@ -431,6 +711,11 @@
 
             document.getElementById('nameInput').value = name;
             document.getElementById('colorInput').value = color;
+            document.getElementById('imageModeInput').value = imageMode;
+            document.getElementById('frontColorInput').value = frontColor;
+            document.getElementById('imageSizeInput').value = imageSize;
+            document.getElementById('imageSizeValue').textContent = imageSize;
+            toggleFrontColor();
 
             // Set page checkboxes
             document.querySelectorAll('#pagesCheckboxes input[type="checkbox"]').forEach(cb => {
@@ -445,6 +730,23 @@
             } else {
                 addLinkRow();
             }
+
+            // Load existing image to preview
+            // First clear any previously uploaded/pasted image
+            document.getElementById('pastedImage').value = '';
+            document.getElementById('preview').innerHTML = '';
+            document.getElementById('pasteArea').innerText = "Click here and Paste (Ctrl+V) an image, or Drag & Drop";
+            document.getElementById('fileInput').value = '';
+
+            if (image) {
+                const imgUrl = image === 'generic.png' ? '/static/generic.png' : '/static/img/' + image;
+                document.getElementById('previewImage').src = imgUrl;
+            }
+
+            // Update preview back color
+            document.getElementById('previewBack').style.backgroundColor = color;
+            previewPage = 0;
+            updatePreview();
         }
 
         function cancelEdit() {
@@ -466,6 +768,19 @@
             document.getElementById('preview').innerHTML = '';
             document.getElementById('pastedImage').value = '';
             document.getElementById('pasteArea').innerText = "Click here and Paste (Ctrl+V) an image, or Drag & Drop";
+
+            // Reset image mode and front color
+            document.getElementById('imageModeInput').value = 'fill';
+            document.getElementById('frontColorInput').value = '#11161F';
+            document.getElementById('imageSizeInput').value = '80';
+            document.getElementById('imageSizeValue').textContent = '80';
+            toggleFrontColor();
+
+            // Reset preview card
+            document.getElementById('previewImage').src = '/static/generic.png';
+            document.getElementById('previewBack').style.backgroundColor = '#000000';
+            previewPage = 0;
+            updatePreview();
         }
 
         // ========== FILTER & PAGINATION ==========
@@ -535,6 +850,14 @@
         const pasteArea = document.getElementById('pasteArea');
         const preview = document.getElementById('preview');
         const hiddenInput = document.getElementById('pastedImage');
+        const fileInput = document.getElementById('fileInput');
+
+        // File input change handler
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                handleImage(e.target.files[0]);
+            }
+        });
 
         pasteArea.addEventListener('paste', (e) => {
             const items = (e.clipboardData || e.originalEvent.clipboardData).items;
@@ -558,9 +881,12 @@
         function handleImage(blob) {
             const reader = new FileReader();
             reader.onload = (event) => {
-                preview.innerHTML = `<img src="${event.target.result}" style="max-height: 100px; border: 1px solid #ccc;">`;
-                hiddenInput.value = event.target.result;
+                const dataUrl = event.target.result;
+                preview.innerHTML = `<img src="${dataUrl}" style="max-height: 100px; border: 1px solid #ccc;">`;
+                hiddenInput.value = dataUrl;
                 pasteArea.innerText = "Image captured!";
+                // Directly update preview card image
+                document.getElementById('previewImage').src = dataUrl;
             };
             reader.readAsDataURL(blob);
         }
