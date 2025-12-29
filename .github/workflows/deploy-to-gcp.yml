@@ -36,25 +36,6 @@ jobs:
             echo "⚠️ Server at ${{ env.GCP_IP }}:22 is not reachable, skipping all deployment steps"
           fi
 
-      - name: Set up Docker Buildx
-        if: steps.ping_check.outputs.server_available == 'true'
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to Docker Hub
-        if: steps.ping_check.outputs.server_available == 'true'
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build and push Docker image
-        if: steps.ping_check.outputs.server_available == 'true'
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-
       - name: Deploy to GCP instance
         if: steps.ping_check.outputs.server_available == 'true'
         uses: appleboy/ssh-action@v1.0.3
