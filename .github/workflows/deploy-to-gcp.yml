@@ -71,7 +71,7 @@ jobs:
             docker rm ${{ env.CONTAINER_NAME }} 2>/dev/null || true
             
             # Pull latest image from Docker Hub
-            docker pull ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+            #docker pull ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
             
             # Run with Docker Compose
             docker-compose up -d --force-recreate
