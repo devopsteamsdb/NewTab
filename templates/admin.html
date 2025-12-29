@@ -327,7 +327,7 @@
                 <tr class="card-row"
                     data-search="{{ system.name|lower }} {{ system.pages|join(' ')|lower }} {% for l in system.links %}{{ l.text|lower }} {{ l.url|lower }} {% endfor %}">
                     <td><img src="{{ url_for('static', filename='img/' + system.image) }}"
-                            onerror="this.src='{{ url_for('static', filename='img/generic.png') }}'"></td>
+                            onerror="this.src='{{ url_for('static', filename='generic.png') }}'"></td>
                     <td>{{ system.name }}</td>
                     <td>
                         {% for pid in system.pages %}

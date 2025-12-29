@@ -54,7 +54,7 @@
 				<div class="flip-card-inner">
 					<div class="flip-card-front">
 						<img src="{{ url_for('static', filename='img/' + system.image) }}" alt="{{ system.name }}"
-							onerror="this.src='{{ url_for('static', filename='img/generic.png') }}'">
+							onerror="this.src='{{ url_for('static', filename='generic.png') }}'">
 					</div>
 					<div class="flip-card-back" style="background-color: {{ system.back_color|default('#000000') }};">
 						{% if one_link %}
