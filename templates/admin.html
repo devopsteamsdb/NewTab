@@ -26,9 +26,11 @@
                 <form id="systemForm" action="{{ url_for('add_system') }}" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label class="admin-label">Use Preset (optional)</label>
+                        <input type="text" id="presetSearch" placeholder="Search presets..." class="page-input"
+                            style="width: 100%; margin-bottom: 5px;" oninput="filterPresets(this.value)">
                         <select id="presetSelect" class="admin-select" onchange="applyPreset(this.value)">
                             <option value="">-- Custom Card --</option>
-                            {% for preset in presets %}
+                            {% for preset in presets|sort(attribute='name') %}
                             <option value="{{ preset.id }}" data-image="{{ preset.image }}"
                                 data-image-mode="{{ preset.image_mode }}" data-image-size="{{ preset.image_size }}"
                                 data-back-color="{{ preset.back_color }}" data-front-color="{{ preset.front_color }}"
@@ -265,6 +267,46 @@
     <script>
         // ========== LIVE PREVIEW ==========
         let previewPage = 0;
+
+        function filterPresets(query) {
+            const select = document.getElementById('presetSelect');
+            const options = select.options;
+            const q = query.toLowerCase();
+            let firstMatchIndex = -1;
+
+            for (let i = 0; i < options.length; i++) {
+                const option = options[i];
+                const text = option.text.toLowerCase();
+
+                // Always keep "Custom Card" visible
+                if (option.value === "") {
+                    option.style.display = "";
+                    if (q === "") firstMatchIndex = i;
+                } else {
+                    if (text.includes(q)) {
+                        option.style.display = "";
+                        if (firstMatchIndex === -1) firstMatchIndex = i;
+                    } else {
+                        option.style.display = "none";
+                    }
+                }
+            }
+
+            // Auto-select the first visible match
+            if (firstMatchIndex !== -1) {
+                select.selectedIndex = firstMatchIndex;
+                applyPreset(select.options[firstMatchIndex].value);
+            } else {
+                // No match, maybe reset to custom? or keep previous?
+                // Letting it stay on previous or custom is safer.
+                // But usually if no match, we might want to reset.
+                // For now, let's reset to custom if search has no results
+                if (select.value !== "") {
+                    select.value = "";
+                    applyPreset("");
+                }
+            }
+        }
 
         function toggleFrontColor() {
             const mode = document.getElementById('imageModeInput').value;

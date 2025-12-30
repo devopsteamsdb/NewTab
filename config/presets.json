@@ -889,5 +889,293 @@
         "image_size": "95",
         "back_color": "#212078",
         "front_color": "#ffffff"
+    },
+    {
+        "id": "pihole",
+        "name": "Pi-hole",
+        "image": "presets/pihole.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#e02828",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "openai",
+        "name": "OpenAI",
+        "image": "presets/openai.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#10a37f",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "claude",
+        "name": "Claude",
+        "image": "presets/claude.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#d97757",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "gemini",
+        "name": "Gemini",
+        "image": "presets/gemini.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#000000",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "midjourney",
+        "name": "Midjourney",
+        "image": "presets/midjourney.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#000000",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "authelia",
+        "name": "Authelia",
+        "image": "presets/authelia.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#232f3e",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "privacyidea",
+        "name": "privacyIDEA",
+        "image": "presets/privacyidea.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#325d88",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "nginxproxymanager",
+        "name": "Nginx Proxy Manager",
+        "image": "presets/nginxproxymanager.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#46b0a8",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "selenium",
+        "name": "Selenium",
+        "image": "presets/selenium.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#43b02a",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "immich",
+        "name": "Immich",
+        "image": "presets/immich.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#5755ff",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "vaultwarden",
+        "name": "Vaultwarden",
+        "image": "presets/vaultwarden.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#171c26",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "bitwarden",
+        "name": "Bitwarden",
+        "image": "presets/bitwarden.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#175ddc",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "plex",
+        "name": "Plex",
+        "image": "presets/plex.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#e5a00d",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "tautulli",
+        "name": "Tautulli",
+        "image": "presets/tautulli.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#282a2d",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "overseerr",
+        "name": "Overseerr",
+        "image": "presets/overseerr.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#40c463",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "sonarr",
+        "name": "Sonarr",
+        "image": "presets/sonarr.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#00c6f5",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "radarr",
+        "name": "Radarr",
+        "image": "presets/radarr.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#ffc230",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "prowlarr",
+        "name": "Prowlarr",
+        "image": "presets/prowlarr.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#ff3333",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "deluge",
+        "name": "Deluge",
+        "image": "presets/deluge.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#4c83e2",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "tunarr",
+        "name": "Tunarr",
+        "image": "presets/tunarr.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#7b42bc",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "asus",
+        "name": "Asus",
+        "image": "presets/asus.png",
+        "image_mode": "fit",
+        "image_size": "90",
+        "back_color": "#005696",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "netgear",
+        "name": "Netgear",
+        "image": "presets/netgear.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#bf2033",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "hpe",
+        "name": "HPE",
+        "image": "presets/hpe.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#01a982",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "opnsense",
+        "name": "OPNsense",
+        "image": "presets/opnsense.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#db3f1e",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "reolink",
+        "name": "Reolink",
+        "image": "presets/reolink.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#0087cf",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "telegram",
+        "name": "Telegram",
+        "image": "presets/telegram.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#3e9edd",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "cloudflare",
+        "name": "Cloudflare",
+        "image": "presets/cloudflare.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#f6821f",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "twitter_x",
+        "name": "X",
+        "image": "presets/twitter_x.png",
+        "image_mode": "fit",
+        "image_size": "70",
+        "back_color": "#000000",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "facebook",
+        "name": "Facebook",
+        "image": "presets/facebook.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#1877f2",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "linkedin",
+        "name": "LinkedIn",
+        "image": "presets/linkedin.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#0a66c2",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "gmail",
+        "name": "Gmail",
+        "image": "presets/gmail.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#ffffff",
+        "front_color": "#ea4335"
+    },
+    {
+        "id": "quickwit",
+        "name": "Quickwit",
+        "image": "presets/quickwit.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#3629b3",
+        "front_color": "#ffffff"
     }
 ]
