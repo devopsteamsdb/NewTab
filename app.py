@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
+from flasgger import Swagger
 import json
 import os
 import base64
@@ -8,6 +9,15 @@ import re
 app = Flask(__name__)
 DATA_FILE = 'data/database/data.json'
 UPLOAD_FOLDER = 'data/uploads'
+
+# Swagger Configuration
+app.config['SWAGGER'] = {
+    'title': 'NewTab Dashboard API',
+    'uiversion': 3
+}
+swagger_config = Swagger.DEFAULT_CONFIG.copy()
+swagger_config['specs_route'] = '/swagger/'
+swagger = Swagger(app, config=swagger_config)
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs('data/database', exist_ok=True)
@@ -49,6 +59,20 @@ def slugify(text):
 
 @app.route('/')
 def index():
+    """
+    Main dashboard page
+    ---
+    parameters:
+      - name: page
+        in: query
+        type: string
+        required: false
+        default: default
+        description: The ID of the page to display
+    responses:
+      200:
+        description: Success
+    """
     data = load_data()
     page_id = request.args.get('page', 'default')
     pages = data.get('pages', [])
@@ -72,6 +96,13 @@ def index():
 
 @app.route('/admin')
 def admin():
+    """
+    Admin configuration page
+    ---
+    responses:
+      200:
+        description: Success
+    """
     data = load_data()
     settings = data.get('settings', {})
     if 'search_enabled' not in settings: settings['search_enabled'] = True
@@ -87,6 +118,30 @@ def admin():
 
 @app.route('/admin/settings', methods=['POST'])
 def update_settings():
+    """
+    Update global dashboard settings
+    ---
+    parameters:
+      - name: search_enabled
+        in: formData
+        type: string
+        enum: [on, off]
+      - name: search_base_url
+        in: formData
+        type: string
+      - name: search_placeholder
+        in: formData
+        type: string
+      - name: search_width
+        in: formData
+        type: integer
+      - name: footer_text
+        in: formData
+        type: string
+    responses:
+      302:
+        description: Redirects back to admin page
+    """
     data = load_data()
     current_settings = data.get('settings', {})
     search_enabled = request.form.get('search_enabled') == 'on'
@@ -107,6 +162,19 @@ def update_settings():
 # ========== PAGE MANAGEMENT ==========
 @app.route('/admin/pages/add', methods=['POST'])
 def add_page():
+    """
+    Add a new dashboard page
+    ---
+    parameters:
+      - name: page_name
+        in: formData
+        type: string
+        required: true
+        description: The display name of the page
+    responses:
+      302:
+        description: Redirects back to admin page
+    """
     data = load_data()
     name = request.form.get('page_name', '').strip()
     if name:
@@ -119,6 +187,19 @@ def add_page():
 
 @app.route('/admin/pages/delete/<page_id>', methods=['POST'])
 def delete_page(page_id):
+    """
+    Delete a dashboard page
+    ---
+    parameters:
+      - name: page_id
+        in: path
+        type: string
+        required: true
+        description: The ID of the page to delete
+    responses:
+      302:
+        description: Redirects back to admin page
+    """
     if page_id == 'default':
         return redirect(url_for('admin'))  # Cannot delete default
     data = load_data()
@@ -133,6 +214,46 @@ def delete_page(page_id):
 # ========== SYSTEM MANAGEMENT ==========
 @app.route('/admin/add', methods=['POST'])
 def add_system():
+    """
+    Add a new system (card) to the dashboard
+    ---
+    parameters:
+      - name: name
+        in: formData
+        type: string
+        required: true
+      - name: back_color
+        in: formData
+        type: string
+      - name: front_color
+        in: formData
+        type: string
+      - name: image_mode
+        in: formData
+        type: string
+        enum: [fit, fill]
+      - name: image_size
+        in: formData
+        type: integer
+      - name: preset_image
+        in: formData
+        type: string
+      - name: link_text[]
+        in: formData
+        type: array
+        items: {type: string}
+      - name: link_url[]
+        in: formData
+        type: array
+        items: {type: string}
+      - name: assigned_pages[]
+        in: formData
+        type: array
+        items: {type: string}
+    responses:
+      302:
+        description: Redirects back to admin page
+    """
     data = load_data()
     
     name = request.form.get('name')
@@ -190,6 +311,48 @@ def add_system():
 
 @app.route('/admin/update/<int:id>', methods=['POST'])
 def update_system(id):
+    """
+    Update an existing system (card)
+    ---
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+        description: The index of the system to update
+      - name: name
+        in: formData
+        type: string
+        required: true
+      - name: back_color
+        in: formData
+        type: string
+      - name: front_color
+        in: formData
+        type: string
+      - name: image_mode
+        in: formData
+        type: string
+        enum: [fit, fill]
+      - name: image_size
+        in: formData
+        type: integer
+      - name: link_text[]
+        in: formData
+        type: array
+        items: {type: string}
+      - name: link_url[]
+        in: formData
+        type: array
+        items: {type: string}
+      - name: assigned_pages[]
+        in: formData
+        type: array
+        items: {type: string}
+    responses:
+      302:
+        description: Redirects back to admin page
+    """
     data = load_data()
     systems = data.get('systems', [])
     
@@ -245,6 +408,19 @@ def update_system(id):
 
 @app.route('/admin/delete/<int:id>', methods=['POST'])
 def delete_system(id):
+    """
+    Delete a system (card) from the dashboard
+    ---
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+        description: The index of the system to delete
+    responses:
+      302:
+        description: Redirects back to admin page
+    """
     data = load_data()
     systems = data.get('systems', [])
     if 0 <= id < len(systems):
@@ -254,6 +430,21 @@ def delete_system(id):
 
 @app.route('/uploads/<path:filename>')
 def uploaded_file(filename):
+    """
+    Serve an uploaded image file
+    ---
+    parameters:
+      - name: filename
+        in: path
+        type: string
+        required: true
+        description: The filename to serve
+    responses:
+      200:
+        description: The image file
+      404:
+        description: File not found
+    """
     return send_from_directory(UPLOAD_FOLDER, filename)
 
 if __name__ == '__main__':

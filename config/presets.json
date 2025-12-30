@@ -194,8 +194,8 @@
         "image": "presets/splunk.png",
         "image_mode": "fit",
         "image_size": "80",
-        "back_color": "#000000",
-        "front_color": "#65a637"
+        "back_color": "#72af36",
+        "front_color": "#e7ffd6"
     },
     {
         "id": "nginx",
@@ -591,6 +591,15 @@
         "image_mode": "fit",
         "image_size": "70",
         "back_color": "#4285f4",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "photonos",
+        "name": "PhotonOS",
+        "image": "presets/photonos.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#00b4e0",
         "front_color": "#ffffff"
     }
 ]
