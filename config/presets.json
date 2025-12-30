@@ -601,5 +601,293 @@
         "image_size": "80",
         "back_color": "#00b4e0",
         "front_color": "#ffffff"
+    },
+    {
+        "id": "ansible",
+        "name": "Ansible",
+        "image": "presets/ansible.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#1a1918",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "puppet",
+        "name": "Puppet",
+        "image": "presets/puppet.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#ffae1a",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "chef",
+        "name": "Chef",
+        "image": "presets/chef.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#f06c2f",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "nomad",
+        "name": "Nomad",
+        "image": "presets/nomad.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#00caad",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "vault",
+        "name": "HashiCorp Vault",
+        "image": "presets/vault.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#000000",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "authentik",
+        "name": "Authentik",
+        "image": "presets/authentik.png",
+        "image_mode": "fit",
+        "image_size": "90",
+        "back_color": "#fd4b2d",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "wazuh",
+        "name": "Wazuh",
+        "image": "presets/wazuh.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#3585f9",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "zabbix",
+        "name": "Zabbix",
+        "image": "presets/zabbix.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#d40000",
+        "front_color": "#d40000"
+    },
+    {
+        "id": "graylog",
+        "name": "Graylog",
+        "image": "presets/graylog.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#ff3633",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "victoriametrics",
+        "name": "VictoriaMetrics",
+        "image": "presets/victoriametrics.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#335df4",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "influxdb",
+        "name": "InfluxDB",
+        "image": "presets/influxdb.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#22adf6",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "jaeger",
+        "name": "Jaeger",
+        "image": "presets/jaeger.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#60d0e4",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "netdata",
+        "name": "Netdata",
+        "image": "presets/netdata.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#00ab44",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "netbox",
+        "name": "NetBox",
+        "image": "presets/netbox.png",
+        "image_mode": "fit",
+        "image_size": "95",
+        "back_color": "#005c94",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "pfsense",
+        "name": "pfSense",
+        "image": "presets/pfsense.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#212121",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "tailscale",
+        "name": "Tailscale",
+        "image": "presets/tailscale.svg",
+        "image_mode": "fit",
+        "image_size": "70",
+        "back_color": "#000000",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "kafka",
+        "name": "Apache Kafka",
+        "image": "presets/kafka.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#1a1919",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "truenas",
+        "name": "TrueNAS",
+        "image": "presets/truenas.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#0095d5",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "ceph",
+        "name": "Ceph",
+        "image": "presets/ceph.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#f05032",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "rancher",
+        "name": "Rancher",
+        "image": "presets/rancher.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#0075a8",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "portainer",
+        "name": "Portainer",
+        "image": "presets/portainer.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#0b9fe3",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "n8n",
+        "name": "n8n",
+        "image": "presets/n8n.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#ff6d5a",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "mattermost",
+        "name": "Mattermost",
+        "image": "presets/mattermost.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#0058cc",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "nextcloud",
+        "name": "Nextcloud",
+        "image": "presets/nextcloud.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#0082c9",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "proxmox",
+        "name": "Proxmox",
+        "image": "presets/proxmox.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#e57000",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "openmediavault",
+        "name": "OpenMediaVault",
+        "image": "presets/openmediavault.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#3ab0e2",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "unraid",
+        "name": "Unraid",
+        "image": "presets/unraid.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#f15a2c",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "debian",
+        "name": "Debian",
+        "image": "presets/debian.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#a81d33",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "ubuntu",
+        "name": "Ubuntu",
+        "image": "presets/ubuntu.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#e95420",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "synology",
+        "name": "Synology",
+        "image": "presets/synology.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#212121",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "qnap",
+        "name": "QNAP",
+        "image": "presets/qnap.svg",
+        "image_mode": "fit",
+        "image_size": "90",
+        "back_color": "#00a1e3",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "centos",
+        "name": "CentOS",
+        "image": "presets/centos.png",
+        "image_mode": "fit",
+        "image_size": "95",
+        "back_color": "#212078",
+        "front_color": "#ffffff"
     }
 ]
