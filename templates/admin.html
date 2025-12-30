@@ -4,383 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin - NewTab</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <style>
-        body {
-            background: #f5f5f5;
-            min-height: 100vh;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            margin: 0;
-            padding-top: 60px;
-            /* Space for sticky navbar */
-        }
-
-        .admin-container {
-            width: 1200px;
-            margin: 40px auto;
-            text-align: left;
-            background: #fff;
-            padding: 35px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            color: #333;
-        }
-
-        .card-editor-split {
-            display: flex;
-            gap: 40px;
-            align-items: flex-start;
-        }
-
-        .card-editor-form {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .card-editor-preview {
-            width: 200px;
-            flex-shrink: 0;
-            position: sticky;
-            top: 100px;
-        }
-
-        .preview-label {
-            font-size: 12px;
-            color: #888;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .preview-card {
-            background-color: transparent;
-            width: 200px;
-            height: 150px;
-            perspective: 1000px;
-            margin: 0 auto;
-        }
-
-        .preview-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.3s;
-            transform-style: preserve-3d;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-            border-radius: 0;
-        }
-
-        .preview-card:hover .preview-card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .preview-front,
-        .preview-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            border-radius: 0;
-        }
-
-        .preview-front {
-            background-color: #11161F;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .preview-front img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .preview-back {
-            color: white;
-            transform: rotateY(180deg);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #000;
-            flex-direction: column;
-            font-size: 20px;
-        }
-
-        .preview-back a {
-            color: #fff;
-            display: block;
-            margin: 5px 0;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .preview-back span {
-            font-size: 20px;
-        }
-
-        .preview-paginated {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            height: 100%;
-            padding: 5px;
-        }
-
-        .preview-links-list {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .preview-links-list a {
-            color: white;
-            text-decoration: none;
-            font-size: 12px;
-            padding: 2px 5px;
-        }
-
-        .preview-nav {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            padding: 5px 8px;
-            border-radius: 4px;
-            transition: background 0.2s;
-        }
-
-        .preview-nav:hover {
-            background: rgba(255, 255, 255, 0.4);
-        }
-
-        .preview-nav:disabled {
-            opacity: 0.3;
-            cursor: default;
-        }
-
-        h2 {
-            margin-top: 0;
-            color: #1a1a2e;
-            font-weight: 600;
-            font-size: 1.5rem;
-        }
-
-        h3 {
-            margin-top: 30px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-            color: #555;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #555;
-        }
-
-        input[type="text"],
-        input[type="file"] {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background: #fff;
-            color: #333;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #4caf50;
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
-        }
-
-        input[type="text"]::placeholder {
-            color: #999;
-        }
-
-        .link-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .link-row input {
-            flex: 1;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #4caf50, #45a049);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            cursor: pointer;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #f44336, #d32f2f);
-            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
-        }
-
-        .btn-danger:hover {
-            box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
-        }
-
-        .btn-secondary {
-            background: #666;
-            box-shadow: none;
-        }
-
-        .btn-secondary:hover {
-            background: #555;
-            box-shadow: none;
-            transform: none;
-        }
-
-        .btn-small {
-            padding: 8px 16px;
-            font-size: 13px;
-        }
-
-        .paste-area {
-            border: 2px dashed #ccc;
-            padding: 25px;
-            text-align: center;
-            color: #888;
-            margin-bottom: 10px;
-            cursor: pointer;
-            border-radius: 8px;
-            background: #fafafa;
-            transition: all 0.3s ease;
-        }
-
-        .paste-area:hover,
-        .paste-area.active {
-            border-color: #4caf50;
-            background: rgba(76, 175, 80, 0.05);
-        }
-
-        table.system-list {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        table.system-list th {
-            text-align: left;
-            padding: 12px;
-            background: #f8f8f8;
-            color: #666;
-            font-weight: 500;
-            font-size: 13px;
-            text-transform: uppercase;
-        }
-
-        table.system-list td {
-            text-align: left;
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-        }
-
-        table.system-list img {
-            width: 45px;
-            height: 45px;
-            object-fit: cover;
-            border-radius: 6px;
-        }
-
-        table.system-list a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-
-        table.system-list a:hover {
-            text-decoration: underline;
-        }
-
-        .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .checkbox-group label {
-            font-weight: normal;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: #555;
-            cursor: pointer;
-        }
-
-        .checkbox-group input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #4caf50;
-        }
-
-        .page-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .page-item {
-            background: #eee;
-            padding: 8px 14px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #333;
-            font-size: 14px;
-        }
-
-        .page-item.default {
-            background: #d4edda;
-            border: 1px solid #28a745;
-        }
-
-        .inline-form {
-            display: inline;
-        }
-
-        hr {
-            border: none;
-            border-top: 1px solid #eee;
-            margin: 40px 0;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_v2.css') }}">
 </head>
 
-<body>
-    <nav class="navbar" style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000;">
+<body class="admin-body">
+    <nav class="navbar navbar-fixed">
         <div class="nav-links">
             {% for page in pages %}
             <a href="/?page={{ page.id }}" class="nav-link">{{ page.name }}</a>
@@ -391,16 +19,14 @@
 
     <div class="admin-container">
         <!-- ========== CARD FORM ========== -->
-        <h2 id="formTitle">Add New Card</h2>
+        <h2 id="formTitle" class="admin-h2">Add New Card</h2>
 
         <div class="card-editor-split">
             <div class="card-editor-form">
                 <form id="systemForm" action="{{ url_for('add_system') }}" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label>Use Preset (optional)</label>
-                        <select id="presetSelect"
-                            style="padding: 10px; border-radius: 8px; border: 1px solid #ddd; width: 100%;"
-                            onchange="applyPreset(this.value)">
+                        <label class="admin-label">Use Preset (optional)</label>
+                        <select id="presetSelect" class="admin-select" onchange="applyPreset(this.value)">
                             <option value="">-- Custom Card --</option>
                             {% for preset in presets %}
                             <option value="{{ preset.id }}" data-image="{{ preset.image }}"
@@ -414,31 +40,30 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Card Name</label>
+                        <label class="admin-label">Card Name</label>
                         <input type="text" name="name" id="nameInput" required oninput="updatePreview()">
                     </div>
 
                     <div class="form-group">
-                        <label>Image (Upload new to replace)</label>
+                        <label class="admin-label">Image (Upload new to replace)</label>
                         <input type="file" name="image_file" accept="image/*" id="fileInput">
                         <div class="paste-area" id="pasteArea" tabindex="0">
                             Click here and Paste (Ctrl+V) an image, or Drag & Drop
                         </div>
                         <input type="hidden" name="pasted_image" id="pastedImage">
                         <input type="hidden" name="preset_image" id="presetImageInput">
-                        <div id="preview" style="margin-top: 10px;"></div>
+                        <div id="preview" class="preview-container"></div>
                     </div>
 
                     <div class="form-group">
-                        <label>Card Back Color</label>
-                        <input type="color" name="back_color" id="colorInput" value="#000000"
-                            style="width: 100px; height: 40px; padding: 0; border: none;" oninput="updatePreview()">
+                        <label class="admin-label">Card Back Color</label>
+                        <input type="color" name="back_color" id="colorInput" value="#000000" class="color-input"
+                            oninput="updatePreview()">
                     </div>
 
                     <div class="form-group">
-                        <label>Image Display Mode</label>
-                        <select name="image_mode" id="imageModeInput"
-                            style="padding: 10px; border-radius: 8px; border: 1px solid #ddd;"
+                        <label class="admin-label">Image Display Mode</label>
+                        <select name="image_mode" id="imageModeInput" class="admin-select"
                             onchange="updatePreview(); toggleFrontColor();">
                             <option value="fill">Fill (cover entire card)</option>
                             <option value="fit">Fit (show full image)</option>
@@ -446,20 +71,20 @@
                     </div>
 
                     <div class="form-group" id="frontColorGroup" style="display: none;">
-                        <label>Card Front Color (for fit mode)</label>
-                        <input type="color" name="front_color" id="frontColorInput" value="#11161F"
-                            style="width: 100px; height: 40px; padding: 0; border: none;" oninput="updatePreview()">
+                        <label class="admin-label">Card Front Color (for fit mode)</label>
+                        <input type="color" name="front_color" id="frontColorInput" value="#11161F" class="color-input"
+                            oninput="updatePreview()">
                     </div>
 
                     <div class="form-group" id="imageSizeGroup" style="display: none;">
-                        <label>Image Size: <span id="imageSizeValue">80</span>%</label>
+                        <label class="admin-label">Image Size: <span id="imageSizeValue">80</span>%</label>
                         <input type="range" name="image_size" id="imageSizeInput" min="20" max="100" value="80"
-                            style="width: 200px;"
+                            class="image-size-input"
                             oninput="document.getElementById('imageSizeValue').textContent = this.value; updatePreview();">
                     </div>
 
                     <div class="form-group">
-                        <label>Assign to Pages</label>
+                        <label class="admin-label">Assign to Pages</label>
                         <div class="checkbox-group" id="pagesCheckboxes">
                             {% for page in pages %}
                             <label>
@@ -472,7 +97,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Links</label>
+                        <label class="admin-label">Links</label>
                         <div id="linksContainer">
                             <div class="link-row">
                                 <input type="text" name="link_text[]" placeholder="Link Text (e.g. Jira)" required
@@ -485,8 +110,8 @@
                     </div>
 
                     <button type="submit" class="btn" id="submitBtn">Add Card</button>
-                    <button type="button" class="btn btn-secondary" id="cancelBtn" onclick="cancelEdit()"
-                        style="display: none; background-color: #777;">Cancel Edit</button>
+                    <button type="button" class="btn btn-secondary btn-cancel" id="cancelBtn"
+                        onclick="cancelEdit()">Cancel Edit</button>
                 </form>
             </div>
 
@@ -505,13 +130,12 @@
             </div>
         </div>
 
-        <hr style="margin: 40px 0;">
+        <hr class="admin-hr" style="margin: 40px 0;">
 
         <!-- ========== CARDS LIST ========== -->
-        <h2 style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 class="admin-h2 admin-header-flex">
             Existing Cards
-            <input type="text" id="cardFilter" placeholder="Filter cards..."
-                style="font-size: 14px; padding: 8px 12px; width: 250px; font-weight: normal;">
+            <input type="text" id="cardFilter" placeholder="Filter cards..." class="filter-input">
         </h2>
         <table class="system-list" id="cardsTable">
             <thead>
@@ -530,17 +154,16 @@
                     <td>
                         {% if system.image.startswith('presets/') or system.image == 'generic.png' %}
                         <img src="{{ url_for('static', filename=system.image if system.image.startswith('presets/') else 'generic.png') }}"
-                            alt="{{ system.name }}" style="height: 30px; width: 30px; object-fit: contain;">
+                            alt="{{ system.name }}" class="table-icon">
                         {% else %}
                         <img src="{{ url_for('uploaded_file', filename=system.image) }}" alt="{{ system.name }}"
-                            style="height: 30px; width: 30px; object-fit: contain;">
+                            class="table-icon">
                         {% endif %}
                     </td>
                     <td>{{ system.name }}</td>
                     <td>
                         {% for pid in system.pages %}
-                        <span
-                            style="background: #eee; padding: 2px 6px; border-radius: 3px; margin-right: 3px; font-size: 12px;">{{
+                        <span class="tag-badge">{{
                             pid }}</span>
                         {% endfor %}
                     </td>
@@ -570,13 +193,12 @@
         <!-- Pagination -->
         <div id="pagination" style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;"></div>
 
-        <hr style="margin: 40px 0;">
+        <hr class="admin-hr" style="margin: 40px 0;">
 
         <!-- ========== PAGE MANAGEMENT ========== -->
-        <h2>Manage Pages</h2>
-        <form action="{{ url_for('add_page') }}" method="POST" style="display: flex; gap: 10px; margin-bottom: 15px;">
-            <input type="text" name="page_name" placeholder="New page name (e.g. DevOps)" required
-                style="flex: 1; margin: 0;">
+        <h2 class="admin-h2">Manage Pages</h2>
+        <form action="{{ url_for('add_page') }}" method="POST" class="page-form">
+            <input type="text" name="page_name" placeholder="New page name (e.g. DevOps)" required class="page-input">
             <button type="submit" class="btn btn-small">Add Page</button>
         </form>
         <div class="page-list">
@@ -586,41 +208,47 @@
                 {% if page.id != 'default' %}
                 <form action="{{ url_for('delete_page', page_id=page.id) }}" method="POST" class="inline-form"
                     onsubmit="return confirm('Delete page {{ page.name }}?');">
-                    <button type="submit" class="btn btn-danger btn-small" style="padding: 2px 6px;">×</button>
+                    <button type="submit" class="btn btn-danger btn-small btn-xs">×</button>
                 </form>
                 {% endif %}
             </div>
             {% endfor %}
         </div>
 
-        <hr>
+        <hr class="admin-hr">
 
         <!-- ========== SEARCH SETTINGS ========== -->
-        <h2>Search Bar Settings</h2>
-        <form action="{{ url_for('update_settings') }}" method="POST"
-            style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center;">
-            <label style="display: flex; align-items: center; gap: 8px; margin: 0;">
+        <h2 class="admin-h2">Search Bar Settings</h2>
+        <form action="{{ url_for('update_settings') }}" method="POST" class="settings-form">
+            <label class="checkbox-label">
                 <input type="checkbox" name="search_enabled" {% if settings.search_enabled %}checked{% endif %}
-                    style="width: 20px; height: 20px; accent-color: #4caf50;">
+                    class="checkbox-input-large">
                 Enable Search Bar
             </label>
+            <input type="text" name="search_placeholder" value="{{ settings.search_placeholder }}"
+                placeholder="Placeholder (e.g. Google Search)" class="settings-input-flex">
+            <div class="input-group-row">
+                <input type="number" name="search_width" value="{{ settings.search_width }}" placeholder="Width"
+                    class="input-width">
+                <span class="text-muted">px</span>
+            </div>
             <input type="text" name="search_base_url" value="{{ settings.search_base_url }}"
-                placeholder="Search Base URL (e.g. http://server/?search=)"
-                style="flex: 1; min-width: 300px; margin: 0;">
+                placeholder="Search Base URL (e.g. https://www.google.com/search?q=)" class="settings-input-large">
             <button type="submit" class="btn btn-small">Save Settings</button>
         </form>
 
-        <hr>
+        <hr class="admin-hr">
 
         <!-- ========== FOOTER SETTINGS ========== -->
-        <h2>Footer Settings</h2>
-        <form action="{{ url_for('update_settings') }}" method="POST"
-            style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center;">
+        <h2 class="admin-h2">Footer Settings</h2>
+        <form action="{{ url_for('update_settings') }}" method="POST" class="settings-form">
             <input type="hidden" name="search_enabled" value="{{ 'on' if settings.search_enabled else '' }}">
             <input type="hidden" name="search_base_url" value="{{ settings.search_base_url }}">
+            <input type="hidden" name="search_placeholder" value="{{ settings.search_placeholder }}">
+            <input type="hidden" name="search_width" value="{{ settings.search_width }}">
             <input type="text" name="footer_text"
                 value="{{ settings.footer_text|default('Made with Love by DevOps Team') }}" placeholder="Footer text"
-                style="flex: 1; min-width: 400px; margin: 0;">
+                class="settings-input-large-text">
             <button type="submit" class="btn btn-small">Save Footer</button>
         </form>
     </div>

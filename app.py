@@ -53,7 +53,15 @@ def index():
     page_id = request.args.get('page', 'default')
     pages = data.get('pages', [])
     systems = data.get('systems', [])
-    settings = data.get('settings', {'search_enabled': True, 'search_base_url': ''})
+    settings = data.get('settings', {})
+    if 'search_enabled' not in settings: settings['search_enabled'] = True
+    if 'search_base_url' not in settings: 
+        settings['search_base_url'] = "https://www.google.com/search?q="
+    if 'search_placeholder' not in settings:
+        settings['search_placeholder'] = "Google Search"
+    if 'search_width' not in settings:
+        settings['search_width'] = "300"
+
     
     # Filter systems by page
     filtered = [s for s in systems if page_id in s.get('pages', ['default'])]
@@ -65,7 +73,15 @@ def index():
 @app.route('/admin')
 def admin():
     data = load_data()
-    settings = data.get('settings', {'search_enabled': True, 'search_base_url': ''})
+    settings = data.get('settings', {})
+    if 'search_enabled' not in settings: settings['search_enabled'] = True
+    if 'search_base_url' not in settings: 
+        settings['search_base_url'] = "https://www.google.com/search?q="
+    if 'search_placeholder' not in settings:
+        settings['search_placeholder'] = "Google Search"
+    if 'search_width' not in settings:
+        settings['search_width'] = "300"
+
     presets = sorted(load_presets(), key=lambda x: x['name'].lower())
     return render_template('admin.html', pages=data.get('pages', []), systems=data.get('systems', []), settings=settings, presets=presets)
 
@@ -74,11 +90,15 @@ def update_settings():
     data = load_data()
     current_settings = data.get('settings', {})
     search_enabled = request.form.get('search_enabled') == 'on'
-    search_base_url = request.form.get('search_base_url', '')
+    search_base_url = request.form.get('search_base_url', '').strip()
+    search_placeholder = request.form.get('search_placeholder', '').strip()
+    search_width = request.form.get('search_width', '').strip()
     footer_text = request.form.get('footer_text', current_settings.get('footer_text', 'Made with Love by DevOps Team'))
     data['settings'] = {
         'search_enabled': search_enabled,
         'search_base_url': search_base_url,
+        'search_placeholder': search_placeholder,
+        'search_width': search_width,
         'footer_text': footer_text
     }
     save_data(data)
