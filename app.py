@@ -374,6 +374,11 @@ def update_system(id):
         current_image = systems[id].get('image', 'generic.png')
         image_filename = current_image
         
+        # Check for preset image first (so it can be overridden by upload if both present, though UI prevents this)
+        preset_image = request.form.get('preset_image')
+        if preset_image:
+            image_filename = preset_image
+        
         file = request.files.get('image_file')
         if file and file.filename:
             filename = f"{uuid.uuid4()}_{file.filename}"
@@ -392,7 +397,7 @@ def update_system(id):
                 f.write(decoded)
             image_filename = filename
 
-        systems[id] = {
+        system_data = {
             'name': name,
             'image': image_filename,
             'image_mode': image_mode,
@@ -402,6 +407,7 @@ def update_system(id):
             'links': links,
             'pages': assigned_pages
         }
+        systems[id] = system_data
         
         save_data(data)
     return redirect(url_for('admin'))
