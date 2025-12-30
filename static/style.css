@@ -161,6 +161,30 @@
 			font-size: 20px;
 		}
 
+		.tags-container {
+			position: absolute;
+			top: 5px;
+			right: 5px;
+			z-index: 5;
+			pointer-events: none;
+			display: flex;
+			flex-direction: column;
+			gap: 3px;
+			align-items: flex-end;
+		}
+
+		.tag-badge {
+			background-color: rgba(0, 0, 0, 0.9);
+			color: #fff;
+			padding: 2px 6px;
+			border-radius: 3px;
+			font-size: 11px;
+			font-weight: bold;
+			letter-spacing: 0.5px;
+			backdrop-filter: blur(2px);
+			white-space: nowrap;
+		}
+
 		.element a {
 			color: #fff;
 			display: block;
@@ -672,12 +696,8 @@
 			object-fit: contain;
 		}
 
-		.tag-badge {
-			background: #eee;
-			padding: 2px 6px;
-			border-radius: 3px;
-			margin-right: 3px;
-			font-size: 12px;
+		.system-list .tag-badge {
+			margin-right: 4px;
 		}
 
 		.page-form {

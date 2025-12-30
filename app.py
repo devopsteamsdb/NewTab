@@ -256,7 +256,8 @@ def add_system():
     """
     data = load_data()
     
-    name = request.form.get('name')
+    tag_input = request.form.get('tag', '')
+    tags = [t.strip() for t in tag_input.split(',') if t.strip()]
     back_color = request.form.get('back_color', '#000000')
     image_mode = request.form.get('image_mode', 'fill')
     front_color = request.form.get('front_color', '#11161F')
@@ -297,6 +298,7 @@ def add_system():
 
     data['systems'].append({
         'name': name,
+        'tags': tags,
         'image': image_filename,
         'image_mode': image_mode,
         'image_size': image_size,
@@ -358,6 +360,8 @@ def update_system(id):
     
     if 0 <= id < len(systems):
         name = request.form.get('name')
+        tag_input = request.form.get('tag', '')
+        tags = [t.strip() for t in tag_input.split(',') if t.strip()]
         back_color = request.form.get('back_color', '#000000')
         image_mode = request.form.get('image_mode', 'fill')
         front_color = request.form.get('front_color', '#11161F')
@@ -399,6 +403,7 @@ def update_system(id):
 
         system_data = {
             'name': name,
+            'tags': tags,
             'image': image_filename,
             'image_mode': image_mode,
             'image_size': image_size,
@@ -463,6 +468,30 @@ def move_system(direction, id):
         systems[id], systems[id+1] = systems[id+1], systems[id]
         save_data(data)
         
+    return redirect(url_for('admin'))
+
+@app.route('/admin/duplicate/<int:id>', methods=['POST'])
+def duplicate_system(id):
+    """
+    Duplicate a system card
+    ---
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+    responses:
+      302:
+        description: Redirects back to admin page
+    """
+    data = load_data()
+    systems = data.get('systems', [])
+    if 0 <= id < len(systems):
+        import copy
+        new_system = copy.deepcopy(systems[id])
+        new_system['name'] += ' (Copy)'
+        systems.insert(id + 1, new_system)
+        save_data(data)
     return redirect(url_for('admin'))
 
 @app.route('/uploads/<path:filename>')

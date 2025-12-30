@@ -47,6 +47,12 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="admin-label">Tags / Versions (comma separated)</label>
+                        <input type="text" name="tag" id="tagInput" placeholder="e.g. v4.10, PROD"
+                            oninput="updatePreview()">
+                    </div>
+
+                    <div class="form-group">
                         <label class="admin-label">Image (Upload new to replace)</label>
                         <input type="file" name="image_file" accept="image/*" id="fileInput">
                         <div class="paste-area" id="pasteArea" tabindex="0">
@@ -144,6 +150,7 @@
                 <tr>
                     <th>Image</th>
                     <th>Name</th>
+                    <th>Tags</th>
                     <th>Pages</th>
                     <th>Links</th>
                     <th>Action</th>
@@ -164,6 +171,15 @@
                     </td>
                     <td>{{ system.name }}</td>
                     <td>
+                        {% if system.tags %}
+                        {% for tag in system.tags %}
+                        <span class="tag-badge" style="background-color: #555;">{{ tag }}</span>
+                        {% endfor %}
+                        {% elif system.tag %}
+                        <span class="tag-badge" style="background-color: #555;">{{ system.tag }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
                         {% for pid in system.pages %}
                         <span class="tag-badge">{{
                             pid }}</span>
@@ -183,8 +199,9 @@
                                 onclick="moveCard('down', {{ loop.index0 }})" {% if loop.last %}disabled
                                 style="opacity:0.3" {% endif %}>↓</button>
                             <button class="btn btn-secondary edit-btn btn-small" data-id="{{ loop.index0 }}"
-                                data-name="{{ system.name }}" data-color="{{ system.back_color|default('#000000') }}"
-                                data-image="{{ system.image }}"
+                                data-name="{{ system.name }}"
+                                data-tags='{{ (system.tags if system.tags else [system.tag] if system.tag else [])|tojson|e }}'
+                                data-color="{{ system.back_color|default('#000000') }}" data-image="{{ system.image }}"
                                 data-image-mode="{{ system.image_mode|default('fill') }}"
                                 data-front-color="{{ system.front_color|default('#11161F') }}"
                                 data-image-size="{{ system.image_size|default('80') }}"
@@ -193,6 +210,11 @@
                             <form action="{{ url_for('delete_system', id=loop.index0) }}" method="POST"
                                 class="inline-form" onsubmit="return confirm('Delete this card?');">
                                 <button type="submit" class="btn btn-danger btn-small">Delete</button>
+                            </form>
+                            <form action="{{ url_for('duplicate_system', id=loop.index0) }}" method="POST"
+                                class="inline-form" onsubmit="return confirm('Duplicate this card?');">
+                                <button type="submit" class="btn btn-secondary btn-small"
+                                    title="Duplicate">Copy</button>
                             </form>
                         </div>
                     </td>
@@ -329,7 +351,12 @@
                 document.getElementById('pastedImage').value = '';
                 document.getElementById('fileInput').value = '';
                 document.getElementById('preview').innerHTML = '';
+                document.getElementById('presetImageInput').value = '';
+                document.getElementById('pastedImage').value = '';
+                document.getElementById('fileInput').value = '';
+                document.getElementById('preview').innerHTML = '';
                 document.getElementById('linksContainer').innerHTML = '';
+                document.getElementById('tagInput').value = '';
                 addLinkRow();
                 toggleFrontColor();
                 updatePreview();
@@ -372,6 +399,9 @@
 
         function updatePreview() {
             const name = document.getElementById('nameInput').value || 'Card Name';
+            const tagInput = document.getElementById('tagInput').value;
+            const tags = tagInput.split(',').map(t => t.trim()).filter(t => t);
+
             const color = document.getElementById('colorInput').value || '#000000';
             const imageMode = document.getElementById('imageModeInput').value || 'fill';
             const frontColor = document.getElementById('frontColorInput').value || '#11161F';
@@ -428,6 +458,20 @@
             if (pastedImage) {
                 previewImage.src = pastedImage;
             }
+
+            // Render tags in preview (front)
+            // Remove existing container if any
+            let tagsContainer = previewFront.querySelector('.tags-container');
+            if (tagsContainer) {
+                tagsContainer.remove();
+            }
+
+            if (tags.length > 0) {
+                tagsContainer = document.createElement('div');
+                tagsContainer.className = 'tags-container';
+                tagsContainer.innerHTML = tags.map(t => `<span class="tag-badge preview-badge">${t}</span>`).join('');
+                previewFront.appendChild(tagsContainer);
+            }
         }
 
         function previewPaginate(dir) {
@@ -451,6 +495,7 @@
         function editSystem(btn) {
             const id = btn.dataset.id;
             const name = btn.dataset.name;
+            const tags = JSON.parse(btn.dataset.tags || '[]');
             const color = btn.dataset.color;
             const image = btn.dataset.image;
             const imageMode = btn.dataset.imageMode || 'fill';
@@ -469,6 +514,7 @@
             form.action = '/admin/update/' + id;
 
             document.getElementById('nameInput').value = name;
+            document.getElementById('tagInput').value = tags.join(', ');
             document.getElementById('colorInput').value = color;
             document.getElementById('imageModeInput').value = imageMode;
             document.getElementById('frontColorInput').value = frontColor;

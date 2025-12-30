@@ -62,6 +62,17 @@
 						<img src="{{ url_for('uploaded_file', filename=system.image) }}" alt="{{ system.name }}"
 							style="{% if system.image_mode == 'fit' %}width: {{ system.image_size|default('80') }}%; height: {{ system.image_size|default('80') }}%; object-fit: contain;{% else %}width: 100%; height: 100%; object-fit: cover;{% endif %}">
 						{% endif %}
+						{% if system.tags %}
+						<div class="tags-container">
+							{% for tag in system.tags %}
+							<span class="tag-badge">{{ tag }}</span>
+							{% endfor %}
+						</div>
+						{% elif system.tag %}
+						<div class="tags-container">
+							<span class="tag-badge">{{ system.tag }}</span>
+						</div>
+						{% endif %}
 					</div>
 					<div class="flip-card-back" style="background-color: {{ system.back_color|default('#000000') }};">
 						{% if one_link %}
