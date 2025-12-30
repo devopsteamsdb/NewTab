@@ -13,6 +13,22 @@ A modern, customizable homepage manager with flip-card navigation and dynamic pa
 - 📱 **Responsive Layout** - Automatically balances card grid for optimal display
 - ⚡ **Pagination** - Smart pagination for cards with many links
 
+## Included Presets
+
+The application comes with over 60 built-in presets for popular DevOps and IT tools, including:
+
+**Cloud & Infrastructure:** AWS, Azure, Google Cloud, DigitalOcean, Kubernetes, OpenShift, Docker, Terraform, VMware, Nutanix, Dell, Windows, Red Hat
+
+**DevOps & CI/CD:** Jenkins, GitLab, GitHub, Azure DevOps, ArgoCD, Nexus, Kasten, Veeam
+
+**Databases & Storage:** PostgreSQL, MongoDB, MySQL, Redis, Elasticsearch, MinIO S3, NetApp
+
+**Monitoring & Logging:** Grafana, Prometheus, Splunk, Uptime Kuma, LiveNX, Tufin, Monitor
+
+**Security & Networking:** Cisco, Cisco ISE, Check Point, Palo Alto, CyberArk, Cybereason, McAfee, Trellix, Prisma Cloud, HAProxy, Nginx, Apache, Traefik, phpIPAM
+
+**Productivity & Tools:** Outlook, Exchange, SharePoint, Wiki.js, Jira, Confluence, Swagger, Postman, Home Assistant, WordPress, Keycloak, ADFS, OmniSSA Horizon, Stratodesk, Chrome, Docs, ServiceNow
+
 ## Quick Start
 
 ### Using Docker Compose
@@ -27,7 +43,7 @@ The app will be available at `http://localhost:5000`
 
 ```bash
 docker pull devopsteamsdb/devopsteamsdb:newtab_latest
-docker run -p 5000:5000 -v ./data.json:/app/data.json -v ./static/img:/app/static/img devopsteamsdb/devopsteamsdb:newtab_latest
+docker run -p 5000:5000 -v $(pwd)/data:/app/data devopsteamsdb/devopsteamsdb:newtab_latest
 ```
 
 ## Configuration
@@ -40,9 +56,18 @@ docker run -p 5000:5000 -v ./data.json:/app/data.json -v ./static/img:/app/stati
 
 ### Data Persistence
 
-Mount these volumes to persist data:
-- `./data.json:/app/data.json` - Cards, pages, and settings
-- `./static/img:/app/static/img` - Uploaded card images
+The application uses a single volume mount for user data persistence:
+
+- `./data:/app/data`
+
+The `data` directory is structured as follows:
+- `data/database/data.json` - Stores cards, pages, and settings
+- `data/uploads/` - Stores uploaded card images
+
+### System Presets
+
+System presets are stored in `config/presets.json`. Code changes to presets are built into the image, but you can override them by mounting a local config directory if needed:
+- `./config:/app/config`
 
 ## Admin Panel
 

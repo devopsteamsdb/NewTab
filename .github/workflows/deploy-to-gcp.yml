@@ -57,8 +57,7 @@ jobs:
                 container_name: "newtab"
                 restart: unless-stopped
                 volumes:
-                  - "/var/newtab/data.json:/app/data.json"
-                  - "/var/newtab/img:/app/static/img"
+                  - "/var/newtab/data:/app/data"
                 networks:
                   - web_transport
             networks:

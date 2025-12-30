@@ -397,6 +397,23 @@
             <div class="card-editor-form">
                 <form id="systemForm" action="{{ url_for('add_system') }}" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
+                        <label>Use Preset (optional)</label>
+                        <select id="presetSelect"
+                            style="padding: 10px; border-radius: 8px; border: 1px solid #ddd; width: 100%;"
+                            onchange="applyPreset(this.value)">
+                            <option value="">-- Custom Card --</option>
+                            {% for preset in presets %}
+                            <option value="{{ preset.id }}" data-image="{{ preset.image }}"
+                                data-image-mode="{{ preset.image_mode }}" data-image-size="{{ preset.image_size }}"
+                                data-back-color="{{ preset.back_color }}" data-front-color="{{ preset.front_color }}"
+                                data-name="{{ preset.name }}">
+                                {{ preset.name }}{% if preset.builtin %} (built-in){% endif %}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
                         <label>Card Name</label>
                         <input type="text" name="name" id="nameInput" required oninput="updatePreview()">
                     </div>
@@ -408,6 +425,7 @@
                             Click here and Paste (Ctrl+V) an image, or Drag & Drop
                         </div>
                         <input type="hidden" name="pasted_image" id="pastedImage">
+                        <input type="hidden" name="preset_image" id="presetImageInput">
                         <div id="preview" style="margin-top: 10px;"></div>
                     </div>
 
@@ -509,8 +527,15 @@
                 {% for system in systems %}
                 <tr class="card-row"
                     data-search="{{ system.name|lower }} {{ system.pages|join(' ')|lower }} {% for l in system.links %}{{ l.text|lower }} {{ l.url|lower }} {% endfor %}">
-                    <td><img src="{{ url_for('static', filename='img/' + system.image) }}"
-                            onerror="this.src='{{ url_for('static', filename='generic.png') }}'"></td>
+                    <td>
+                        {% if system.image.startswith('presets/') or system.image == 'generic.png' %}
+                        <img src="{{ url_for('static', filename=system.image if system.image.startswith('presets/') else 'generic.png') }}"
+                            alt="{{ system.name }}" style="height: 30px; width: 30px; object-fit: contain;">
+                        {% else %}
+                        <img src="{{ url_for('uploaded_file', filename=system.image) }}" alt="{{ system.name }}"
+                            style="height: 30px; width: 30px; object-fit: contain;">
+                        {% endif %}
+                    </td>
                     <td>{{ system.name }}</td>
                     <td>
                         {% for pid in system.pages %}
@@ -609,6 +634,61 @@
             const isFit = mode === 'fit';
             document.getElementById('frontColorGroup').style.display = isFit ? 'block' : 'none';
             document.getElementById('imageSizeGroup').style.display = isFit ? 'block' : 'none';
+        }
+
+        function applyPreset(presetId) {
+            if (!presetId) {
+                // Custom card selected - reset form
+                document.getElementById('nameInput').value = '';
+                document.getElementById('colorInput').value = '#000000';
+                document.getElementById('imageModeInput').value = 'fill';
+                document.getElementById('frontColorInput').value = '#11161F';
+                document.getElementById('imageSizeInput').value = '80';
+                document.getElementById('imageSizeValue').textContent = '80';
+                document.getElementById('previewImage').src = '/static/generic.png';
+                document.getElementById('presetImageInput').value = '';
+                document.getElementById('pastedImage').value = '';
+                document.getElementById('fileInput').value = '';
+                document.getElementById('preview').innerHTML = '';
+                document.getElementById('linksContainer').innerHTML = '';
+                addLinkRow();
+                toggleFrontColor();
+                updatePreview();
+                return;
+            }
+
+            const select = document.getElementById('presetSelect');
+            const option = select.options[select.selectedIndex];
+
+            // Get preset data from option attributes
+            const name = option.dataset.name;
+            const image = option.dataset.image;
+            const imageMode = option.dataset.imageMode;
+            const imageSize = option.dataset.imageSize;
+            const backColor = option.dataset.backColor;
+            const frontColor = option.dataset.frontColor;
+
+            // Apply to form fields
+            document.getElementById('nameInput').value = name;
+            document.getElementById('colorInput').value = backColor;
+            document.getElementById('imageModeInput').value = imageMode;
+            document.getElementById('frontColorInput').value = frontColor;
+            document.getElementById('imageSizeInput').value = imageSize;
+            document.getElementById('imageSizeValue').textContent = imageSize;
+
+            // Set preset image
+            const imgUrl = '/static/' + image;
+            document.getElementById('previewImage').src = imgUrl;
+            document.getElementById('presetImageInput').value = image;
+
+            // Clear any uploaded image
+            document.getElementById('pastedImage').value = '';
+            document.getElementById('fileInput').value = '';
+            document.getElementById('preview').innerHTML = '';
+
+            // Show/hide fit mode options
+            toggleFrontColor();
+            updatePreview();
         }
 
         function updatePreview() {
@@ -739,8 +819,14 @@
             document.getElementById('fileInput').value = '';
 
             if (image) {
-                const imgUrl = image === 'generic.png' ? '/static/generic.png' : '/static/img/' + image;
-                document.getElementById('previewImage').src = imgUrl;
+                let imagePath;
+                if (image === 'generic.png') {
+                    imagePath = "/static/generic.png";
+                } else if (image.startsWith('presets/')) {
+                    imagePath = "/static/" + image;
+                } else {
+                    imagePath = "/uploads/" + image;
+                } document.getElementById('previewImage').src = imagePath;
             }
 
             // Update preview back color

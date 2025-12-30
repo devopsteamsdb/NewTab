@@ -1,0 +1,596 @@
+[
+    {
+        "id": "rabbitmq",
+        "name": "RabbitMQ",
+        "image": "presets/rabbitmq.png",
+        "image_mode": "fit",
+        "image_size": "100",
+        "back_color": "#f76300",
+        "front_color": "#f5f5f5"
+    },
+    {
+        "id": "vmware",
+        "name": "VMware",
+        "image": "presets/vmware.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#717074",
+        "front_color": "#11161f"
+    },
+    {
+        "id": "postgresql",
+        "name": "PostgreSQL",
+        "image": "presets/postgresql.png",
+        "image_mode": "fit",
+        "image_size": "75",
+        "back_color": "#336791",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "mongodb",
+        "name": "MongoDB",
+        "image": "presets/mongodb.png",
+        "image_mode": "fit",
+        "image_size": "70",
+        "back_color": "#00684a",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "mysql",
+        "name": "MySQL",
+        "image": "presets/mysql.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#00618a",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "redis",
+        "name": "Redis",
+        "image": "presets/redis.png",
+        "image_mode": "fit",
+        "image_size": "75",
+        "back_color": "#dc382d",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "elasticsearch",
+        "name": "Elasticsearch",
+        "image": "presets/elasticsearch.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#005571",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "kubernetes",
+        "name": "Kubernetes",
+        "image": "presets/kubernetes.png",
+        "image_mode": "fit",
+        "image_size": "75",
+        "back_color": "#326ce5",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "openshift",
+        "name": "OpenShift",
+        "image": "presets/openshift.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#ee0000",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "docker",
+        "name": "Docker",
+        "image": "presets/docker.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#2496ed",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "jenkins",
+        "name": "Jenkins",
+        "image": "presets/jenkins.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#d33833",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "gitlab",
+        "name": "GitLab",
+        "image": "presets/gitlab.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#fc6d26",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "github",
+        "name": "GitHub",
+        "image": "presets/github.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#24292e",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "argocd",
+        "name": "ArgoCD",
+        "image": "presets/argocd.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#ef7b4d",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "terraform",
+        "name": "Terraform",
+        "image": "presets/terraform.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#7b42bc",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "aws",
+        "name": "AWS",
+        "image": "presets/aws.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#232f3e",
+        "front_color": "#ff9900"
+    },
+    {
+        "id": "azure",
+        "name": "Azure",
+        "image": "presets/azure.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#0078d4",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "gcp",
+        "name": "Google Cloud",
+        "image": "presets/gcp.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#4285f4",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "digitalocean",
+        "name": "DigitalOcean",
+        "image": "presets/digitalocean.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#0080ff",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "grafana",
+        "name": "Grafana",
+        "image": "presets/grafana.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#f46800",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "prometheus",
+        "name": "Prometheus",
+        "image": "presets/prometheus.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#e6522c",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "splunk",
+        "name": "Splunk",
+        "image": "presets/splunk.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#000000",
+        "front_color": "#65a637"
+    },
+    {
+        "id": "nginx",
+        "name": "Nginx",
+        "image": "presets/nginx.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#009639",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "apache",
+        "name": "Apache",
+        "image": "presets/apache.svg",
+        "image_mode": "fit",
+        "image_size": "85",
+        "back_color": "#d22128",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "traefik",
+        "name": "Traefik",
+        "image": "presets/traefik.png",
+        "image_mode": "fit",
+        "image_size": "90",
+        "back_color": "#24a1c1",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "haproxy",
+        "name": "HAProxy",
+        "image": "presets/haproxy.svg",
+        "image_mode": "fit",
+        "image_size": "75",
+        "back_color": "#00a7b3",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "cisco",
+        "name": "Cisco",
+        "image": "presets/cisco.png",
+        "image_mode": "fit",
+        "image_size": "75",
+        "back_color": "#049fd9",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "checkpoint",
+        "name": "Check Point",
+        "image": "presets/checkpoint.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#e21c39",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "netapp",
+        "name": "NetApp",
+        "image": "presets/netapp.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#0067c5",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "paloalto",
+        "name": "Palo Alto",
+        "image": "presets/paloalto.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#fa582d",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "cyberark",
+        "name": "CyberArk",
+        "image": "presets/cyberark.png",
+        "image_mode": "fit",
+        "image_size": "70",
+        "back_color": "#0074ba",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "nutanix",
+        "name": "Nutanix",
+        "image": "presets/nutanix.png",
+        "image_mode": "fit",
+        "image_size": "90",
+        "back_color": "#024da1",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "cybereason",
+        "name": "Cybereason",
+        "image": "presets/cybereason.png",
+        "image_mode": "fit",
+        "image_size": "100",
+        "back_color": "#7b1fa2",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "omnissa",
+        "name": "Omnissa Horizon",
+        "image": "presets/omnissa.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#35b0bf",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "dell",
+        "name": "Dell",
+        "image": "presets/dell.svg",
+        "image_mode": "fit",
+        "image_size": "70",
+        "back_color": "#007db8",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "mcafee",
+        "name": "McAfee",
+        "image": "presets/mcafee.png",
+        "image_mode": "fit",
+        "image_size": "70",
+        "back_color": "#c01818",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "trellix",
+        "name": "Trellix",
+        "image": "presets/trellix.png",
+        "image_mode": "fit",
+        "image_size": "90",
+        "back_color": "#ff6600",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "prismacloud",
+        "name": "Prisma Cloud",
+        "image": "presets/prismacloud.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#00c7e1",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "minio",
+        "name": "MinIO S3",
+        "image": "presets/minio.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#c72c48",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "devops",
+        "name": "DevOps",
+        "image": "presets/devops.png",
+        "image_mode": "fit",
+        "image_size": "90",
+        "back_color": "#1a3a4a",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "wordpress",
+        "name": "WordPress",
+        "image": "presets/wordpress.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#21759b",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "uptimekuma",
+        "name": "Uptime Kuma",
+        "image": "presets/uptimekuma.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#6ad09d",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "homeassistant",
+        "name": "Home Assistant",
+        "image": "presets/homeassistant.png",
+        "image_mode": "fit",
+        "image_size": "85",
+        "back_color": "#03a9f4",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "outlook",
+        "name": "Outlook",
+        "image": "presets/outlook.png",
+        "image_mode": "fit",
+        "image_size": "65",
+        "back_color": "#0078d4",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "exchange",
+        "name": "Exchange",
+        "image": "presets/exchange.png",
+        "image_mode": "fit",
+        "image_size": "85",
+        "back_color": "#0078d4",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "sharepoint",
+        "name": "SharePoint",
+        "image": "presets/sharepoint.png",
+        "image_mode": "fit",
+        "image_size": "100",
+        "back_color": "#0078d4",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "nexus",
+        "name": "Nexus",
+        "image": "presets/nexus.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#336699",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "adfs",
+        "name": "ADFS",
+        "image": "presets/adfs.png",
+        "image_mode": "fit",
+        "image_size": "85",
+        "back_color": "#00a4ef",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "wikijs",
+        "name": "Wiki.js",
+        "image": "presets/wikijs.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#1976d2",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "stratodesk",
+        "name": "Stratodesk",
+        "image": "presets/stratodesk.png",
+        "image_mode": "fit",
+        "image_size": "60",
+        "back_color": "#0a3c5a",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "azuredevops",
+        "name": "Azure DevOps",
+        "image": "presets/azuredevops.png",
+        "image_mode": "fit",
+        "image_size": "85",
+        "back_color": "#0078d4",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "keycloak",
+        "name": "Keycloak",
+        "image": "presets/keycloak.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#008bb9",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "redhat",
+        "name": "Red Hat",
+        "image": "presets/redhat.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#ee0000",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "windows",
+        "name": "Windows",
+        "image": "presets/windows.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#0178d4",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "kasten",
+        "name": "Kasten",
+        "image": "presets/kasten.png",
+        "image_mode": "fit",
+        "image_size": "85",
+        "back_color": "#000000",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "veeam",
+        "name": "Veeam",
+        "image": "presets/veeam.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#00b159",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "livenx",
+        "name": "LiveNX",
+        "image": "presets/livenx.svg",
+        "image_mode": "fit",
+        "image_size": "85",
+        "back_color": "#256be8",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "uipath",
+        "name": "UiPath",
+        "image": "presets/uipath.png",
+        "image_mode": "fit",
+        "image_size": "85",
+        "back_color": "#ff4b20",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "swagger",
+        "name": "Swagger",
+        "image": "presets/swagger.png",
+        "image_mode": "fit",
+        "image_size": "75",
+        "back_color": "#85ea2d",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "docs",
+        "name": "Docs",
+        "image": "presets/docs.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#4285f4",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "monitor",
+        "name": "Monitor",
+        "image": "presets/monitor.png",
+        "image_mode": "fill",
+        "image_size": "80",
+        "back_color": "#11161f",
+        "front_color": "#11161f"
+    },
+    {
+        "id": "servicenow",
+        "name": "ServiceNow",
+        "image": "presets/servicenow.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#293e40",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "phpipam",
+        "name": "phpIPAM",
+        "image": "presets/phpipam.png",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#11161f",
+        "front_color": "#ffffff"
+    },
+    {
+        "id": "tufin",
+        "name": "Tufin",
+        "image": "presets/tufin.svg",
+        "image_mode": "fit",
+        "image_size": "80",
+        "back_color": "#231f20",
+        "front_color": "#231f20"
+    },
+    {
+        "id": "ciscoise",
+        "name": "Cisco ISE",
+        "image": "presets/ciscoise.png",
+        "image_mode": "fit",
+        "image_size": "65",
+        "back_color": "#049fd9",
+        "front_color": "#049fd9"
+    },
+    {
+        "id": "chrome",
+        "name": "Chrome",
+        "image": "presets/chrome.png",
+        "image_mode": "fit",
+        "image_size": "70",
+        "back_color": "#4285f4",
+        "front_color": "#ffffff"
+    }
+]

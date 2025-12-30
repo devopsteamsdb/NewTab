@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 import json
 import os
 import base64
@@ -6,23 +6,39 @@ import uuid
 import re
 
 app = Flask(__name__)
-DATA_FILE = 'data.json'
-UPLOAD_FOLDER = 'static/img'
+DATA_FILE = 'data/database/data.json'
+UPLOAD_FOLDER = 'data/uploads'
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs('data/database', exist_ok=True)
 
 def load_data():
     if not os.path.exists(DATA_FILE):
-        return {"pages": [{"id": "default", "name": "Home"}], "systems": []}
+        return {"pages": [{"id": "default", "name": "Home"}], "systems": [], "presets": []}
     try:
         with open(DATA_FILE, 'r') as f:
             data = json.load(f)
             # Migration: old format (list) -> new format (dict)
             if isinstance(data, list):
-                return {"pages": [{"id": "default", "name": "Home"}], "systems": data}
+                return {"pages": [{"id": "default", "name": "Home"}], "systems": data, "presets": []}
+            # Ensure presets key exists
+            if 'presets' not in data:
+                data['presets'] = []
             return data
     except:
-        return {"pages": [{"id": "default", "name": "Home"}], "systems": []}
+        return {"pages": [{"id": "default", "name": "Home"}], "systems": [], "presets": []}
+
+PRESETS_FILE = 'config/presets.json'
+
+def load_presets():
+    """Load presets from presets.json file"""
+    if not os.path.exists(PRESETS_FILE):
+        return []
+    try:
+        with open(PRESETS_FILE, 'r') as f:
+            return json.load(f)
+    except:
+        return []
 
 def save_data(data):
     with open(DATA_FILE, 'w') as f:
@@ -50,7 +66,8 @@ def index():
 def admin():
     data = load_data()
     settings = data.get('settings', {'search_enabled': True, 'search_base_url': ''})
-    return render_template('admin.html', pages=data.get('pages', []), systems=data.get('systems', []), settings=settings)
+    presets = sorted(load_presets(), key=lambda x: x['name'].lower())
+    return render_template('admin.html', pages=data.get('pages', []), systems=data.get('systems', []), settings=settings, presets=presets)
 
 @app.route('/admin/settings', methods=['POST'])
 def update_settings():
@@ -131,6 +148,11 @@ def add_system():
         with open(os.path.join(UPLOAD_FOLDER, filename), 'wb') as f:
             f.write(decoded)
         image_filename = filename
+    
+    # Check for preset image (built-in images in static/presets/)
+    preset_image = request.form.get('preset_image')
+    if preset_image and image_filename == 'generic.png':
+        image_filename = preset_image
 
     data['systems'].append({
         'name': name,
@@ -209,6 +231,10 @@ def delete_system(id):
         systems.pop(id)
         save_data(data)
     return redirect(url_for('admin'))
+
+@app.route('/uploads/<path:filename>')
+def uploaded_file(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
