@@ -256,6 +256,7 @@ def add_system():
     """
     data = load_data()
     
+    name = request.form.get('name', 'New Card')
     tag_input = request.form.get('tag', '')
     tags = [t.strip() for t in tag_input.split(',') if t.strip()]
     back_color = request.form.get('back_color', '#000000')
@@ -468,6 +469,36 @@ def move_system(direction, id):
         systems[id], systems[id+1] = systems[id+1], systems[id]
         save_data(data)
         
+    return redirect(url_for('admin'))
+
+@app.route('/admin/move-to/<int:from_index>/<int:to_index>', methods=['POST'])
+def move_system_to(from_index, to_index):
+    data = load_data()
+    systems = data.get('systems', [])
+    
+    if 0 <= from_index < len(systems) and 0 <= to_index < len(systems):
+        item = systems.pop(from_index)
+        systems.insert(to_index, item)
+        save_data(data)
+            
+    return redirect(url_for('admin'))
+
+@app.route('/admin/pages/move/<direction>/<page_id>', methods=['POST'])
+def move_page_route(direction, page_id):
+    data = load_data()
+    pages = data.get('pages', [])
+    
+    # Find index of page with page_id
+    index = next((i for i, p in enumerate(pages) if p['id'] == page_id), -1)
+    
+    if index != -1:
+        if direction == 'up' and index > 0:
+            pages[index], pages[index-1] = pages[index-1], pages[index]
+            save_data(data)
+        elif direction == 'down' and index < len(pages) - 1:
+            pages[index], pages[index+1] = pages[index+1], pages[index]
+            save_data(data)
+            
     return redirect(url_for('admin'))
 
 @app.route('/admin/duplicate/<int:id>', methods=['POST'])

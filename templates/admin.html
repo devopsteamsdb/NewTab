@@ -24,6 +24,7 @@
         <div class="card-editor-split">
             <div class="card-editor-form">
                 <form id="systemForm" action="{{ url_for('add_system') }}" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="return_page" id="returnPageInput" value="1">
                     <div class="form-group">
                         <label class="admin-label">Use Preset (optional)</label>
                         <input type="text" id="presetSearch" placeholder="Search presets..." class="page-input"
@@ -158,7 +159,7 @@
             </thead>
             <tbody id="cardsBody">
                 {% for system in systems %}
-                <tr class="card-row"
+                <tr class="card-row" data-index="{{ loop.index0 }}"
                     data-search="{{ system.name|lower }} {{ system.pages|join(' ')|lower }} {% for l in system.links %}{{ l.text|lower }} {{ l.url|lower }} {% endfor %}">
                     <td>
                         {% if system.image.startswith('presets/') or system.image == 'generic.png' %}
@@ -238,6 +239,13 @@
             {% for page in pages %}
             <div class="page-item {% if page.id == 'default' %}default{% endif %}">
                 <span>{{ page.name }}</span>
+                <div style="display: flex; gap: 2px; margin-left: 5px;">
+                    <button type="button" class="btn btn-secondary btn-xs" onclick="movePage('up', '{{ page.id }}')" {%
+                        if loop.first %}disabled style="opacity:0.3" {% endif %}>←</button>
+                    <button type="button" class="btn btn-secondary btn-xs" onclick="movePage('down', '{{ page.id }}')"
+                        {% if loop.last %}disabled style="opacity:0.3" {% endif %}>→</button>
+                </div>
+
                 {% if page.id != 'default' %}
                 <form action="{{ url_for('delete_page', page_id=page.id) }}" method="POST" class="inline-form"
                     onsubmit="return confirm('Delete page {{ page.name }}?');">
@@ -649,34 +657,71 @@
         }
 
         // Move Card Logic (AJAX)
-        async function moveCard(direction, id) {
+        async function moveCard(direction, visualIndex) {
             try {
-                // Determine the correct URL based on backend route
-                const url = `/admin/move/${direction}/${id}`;
+                // Find current row
+                const currentRow = document.querySelector(`tr.card-row[data-index="${visualIndex}"]`);
+                if (!currentRow) return;
 
-                // Fetch follows redirect automatically by default
+                // Find target row based on direction and VISIBILITY
+                let targetRow = null;
+                let sibling = direction === 'up' ? currentRow.previousElementSibling : currentRow.nextElementSibling;
+
+                while (sibling) {
+                    if (sibling.classList.contains('card-row') && sibling.style.display !== 'none') {
+                        targetRow = sibling;
+                        break;
+                    }
+                    sibling = direction === 'up' ? sibling.previousElementSibling : sibling.nextElementSibling;
+                }
+
+                if (!targetRow) return; // No visible item to swap with
+
+                const fromIndex = parseInt(visualIndex);
+                const toIndex = parseInt(targetRow.dataset.index);
+
+                // Save current page before move
+                const savedPage = currentPage;
+                const savedFilter = document.getElementById('cardFilter').value;
+
+                // Use a new route for targeted move
+                const url = `/admin/move-to/${fromIndex}/${toIndex}`;
+
                 const response = await fetch(url, { method: 'POST' });
 
                 if (response.ok) {
                     const html = await response.text();
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(html, 'text/html');
-
-                    // Replace the table body
                     const newBody = doc.getElementById('cardsBody');
                     document.getElementById('cardsBody').innerHTML = newBody.innerHTML;
 
-                    // Re-bind events and pagination
-                    // We also need to preserve the current search filter if any
-                    const currentFilter = document.getElementById('cardFilter').value;
                     bindEvents();
 
-                    if (currentFilter) {
-                        filterCards(currentFilter);
+                    // Restore filter and page
+                    if (savedFilter) {
+                        document.getElementById('cardFilter').value = savedFilter;
+                        filterCards(savedFilter);
                     }
+                    currentPage = savedPage;
+                    renderPage();
                 }
             } catch (error) {
                 console.error('Error moving card:', error);
+            }
+        }
+
+
+        async function movePage(direction, pageId) {
+            try {
+                const url = `/admin/pages/move/${direction}/${pageId}`;
+                const response = await fetch(url, { method: 'POST' });
+                if (response.ok) {
+                    // Start simplified reload to just refresh page
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.error('Error moving page:', error);
             }
         }
 
@@ -687,6 +732,34 @@
             const filterInput = document.getElementById('cardFilter');
             if (filterInput) {
                 filterInput.addEventListener('input', (e) => filterCards(e.target.value));
+            }
+
+            // Restore page from URL hash if present
+            const hash = window.location.hash;
+            if (hash && hash.startsWith('#page=')) {
+                const pageNum = parseInt(hash.replace('#page=', ''));
+                if (!isNaN(pageNum) && pageNum > 0) {
+                    currentPage = pageNum;
+                    renderPage();
+                }
+            }
+
+            // Save current page when form is submitted
+            const form = document.getElementById('systemForm');
+            if (form) {
+                form.addEventListener('submit', (e) => {
+                    document.getElementById('returnPageInput').value = currentPage;
+                    // Store in URL hash so it persists after redirect
+                    sessionStorage.setItem('adminPage', currentPage);
+                });
+            }
+
+            // Restore page from session storage after form submission
+            const savedPage = sessionStorage.getItem('adminPage');
+            if (savedPage) {
+                currentPage = parseInt(savedPage);
+                sessionStorage.removeItem('adminPage');
+                renderPage();
             }
         });
 
