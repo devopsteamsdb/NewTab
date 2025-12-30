@@ -173,17 +173,26 @@
                         {% endfor %}
                     </td>
                     <td>
-                        <button class="btn btn-secondary edit-btn btn-small" data-id="{{ loop.index0 }}"
-                            data-name="{{ system.name }}" data-color="{{ system.back_color|default('#000000') }}"
-                            data-image="{{ system.image }}" data-image-mode="{{ system.image_mode|default('fill') }}"
-                            data-front-color="{{ system.front_color|default('#11161F') }}"
-                            data-image-size="{{ system.image_size|default('80') }}"
-                            data-links='{{ system.links|tojson|e }}'
-                            data-pages='{{ system.pages|tojson|e }}'>Edit</button>
-                        <form action="{{ url_for('delete_system', id=loop.index0) }}" method="POST" class="inline-form"
-                            onsubmit="return confirm('Delete this card?');">
-                            <button type="submit" class="btn btn-danger btn-small">Delete</button>
-                        </form>
+                        <div style="display: flex; gap: 5px;">
+                            <button type="button" class="btn btn-secondary btn-small btn-xs"
+                                onclick="moveCard('up', {{ loop.index0 }})" {% if loop.first %}disabled
+                                style="opacity:0.3" {% endif %}>↑</button>
+                            <button type="button" class="btn btn-secondary btn-small btn-xs"
+                                onclick="moveCard('down', {{ loop.index0 }})" {% if loop.last %}disabled
+                                style="opacity:0.3" {% endif %}>↓</button>
+                            <button class="btn btn-secondary edit-btn btn-small" data-id="{{ loop.index0 }}"
+                                data-name="{{ system.name }}" data-color="{{ system.back_color|default('#000000') }}"
+                                data-image="{{ system.image }}"
+                                data-image-mode="{{ system.image_mode|default('fill') }}"
+                                data-front-color="{{ system.front_color|default('#11161F') }}"
+                                data-image-size="{{ system.image_size|default('80') }}"
+                                data-links='{{ system.links|tojson|e }}'
+                                data-pages='{{ system.pages|tojson|e }}'>Edit</button>
+                            <form action="{{ url_for('delete_system', id=loop.index0) }}" method="POST"
+                                class="inline-form" onsubmit="return confirm('Delete this card?');">
+                                <button type="submit" class="btn btn-danger btn-small">Delete</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 {% endfor %}
@@ -350,9 +359,9 @@
 
             if (linkTexts.length <= 1) {
                 previewBack.innerHTML = `<span>${name}</span>`;
-            } else if (linkTexts.length > 6) {
+            } else if (linkTexts.length > 4) {
                 // Paginated view with arrows
-                const perPage = 6;
+                const perPage = 4;
                 const totalPages = Math.ceil(linkTexts.length / perPage);
                 previewPage = Math.min(previewPage, totalPages - 1);
                 const start = previewPage * perPage;
@@ -544,20 +553,53 @@
             }
         }
 
-        // Edit button listeners
-        document.addEventListener('DOMContentLoaded', () => {
+        function bindEvents() {
             document.querySelectorAll('.edit-btn').forEach(btn => {
                 btn.addEventListener('click', () => editSystem(btn));
             });
+            initPagination();
+        }
+
+        // Move Card Logic (AJAX)
+        async function moveCard(direction, id) {
+            try {
+                // Determine the correct URL based on backend route
+                const url = `/admin/move/${direction}/${id}`;
+
+                // Fetch follows redirect automatically by default
+                const response = await fetch(url, { method: 'POST' });
+
+                if (response.ok) {
+                    const html = await response.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+
+                    // Replace the table body
+                    const newBody = doc.getElementById('cardsBody');
+                    document.getElementById('cardsBody').innerHTML = newBody.innerHTML;
+
+                    // Re-bind events and pagination
+                    // We also need to preserve the current search filter if any
+                    const currentFilter = document.getElementById('cardFilter').value;
+                    bindEvents();
+
+                    if (currentFilter) {
+                        filterCards(currentFilter);
+                    }
+                }
+            } catch (error) {
+                console.error('Error moving card:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            bindEvents();
 
             // Init filter
             const filterInput = document.getElementById('cardFilter');
             if (filterInput) {
                 filterInput.addEventListener('input', (e) => filterCards(e.target.value));
             }
-
-            // Init pagination
-            initPagination();
         });
 
         // Paste Image Logic

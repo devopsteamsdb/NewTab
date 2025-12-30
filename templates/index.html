@@ -47,7 +47,7 @@
 	<div class="grid-container" id="gridContainer" data-count="{{ item_count }}">
 		{% for system in systems %}
 		{% set one_link = system.links|length == 1 %}
-		{% set many_links = system.links|length > 6 %}
+		{% set many_links = system.links|length > 4 %}
 		{% set main_link = system.links[0].url if one_link else '#' %}
 
 		<div {% if one_link %}onclick="window.open('{{ main_link }}')" style="cursor: pointer;" {% endif %}>
@@ -150,7 +150,7 @@
 			const container = btn.closest('.paginated-links');
 			const links = container.querySelectorAll('.paginated-link');
 			let page = parseInt(container.dataset.page) || 0;
-			const perPage = 6;
+			const perPage = 4;
 			const totalPages = Math.ceil(links.length / perPage);
 
 			page = Math.max(0, Math.min(totalPages - 1, page + dir));
@@ -171,9 +171,9 @@
 			document.querySelectorAll('.paginated-links').forEach(container => {
 				const links = container.querySelectorAll('.paginated-link');
 				links.forEach((link, i) => {
-					if (i < 6) link.classList.add('visible');
+					if (i < 4) link.classList.add('visible');
 				});
-				const totalPages = Math.ceil(links.length / 6);
+				const totalPages = Math.ceil(links.length / 4);
 				container.querySelector('.prev').disabled = true;
 				container.querySelector('.next').disabled = (totalPages <= 1);
 			});

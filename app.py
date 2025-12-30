@@ -434,6 +434,37 @@ def delete_system(id):
         save_data(data)
     return redirect(url_for('admin'))
 
+@app.route('/admin/move/<direction>/<int:id>', methods=['POST'])
+def move_system(direction, id):
+    """
+    Move a system card up or down in the list
+    ---
+    parameters:
+      - name: direction
+        in: path
+        type: string
+        enum: [up, down]
+        required: true
+      - name: id
+        in: path
+        type: integer
+        required: true
+    responses:
+      302:
+        description: Redirects back to admin page
+    """
+    data = load_data()
+    systems = data.get('systems', [])
+    
+    if direction == 'up' and id > 0 and id < len(systems):
+        systems[id], systems[id-1] = systems[id-1], systems[id]
+        save_data(data)
+    elif direction == 'down' and id < len(systems) - 1 and id >= 0:
+        systems[id], systems[id+1] = systems[id+1], systems[id]
+        save_data(data)
+        
+    return redirect(url_for('admin'))
+
 @app.route('/uploads/<path:filename>')
 def uploaded_file(filename):
     """
