@@ -112,6 +112,12 @@
                                 <input type="text" name="link_text[]" placeholder="Link Text (e.g. Jira)" required
                                     oninput="updatePreview()">
                                 <input type="text" name="link_url[]" placeholder="URL (e.g. https://...)" required>
+                                <button type="button" class="btn btn-secondary btn-small btn-xs move-link-up"
+                                    onclick="moveLinkRow(this, 'up')" title="Move Up">↑</button>
+                                <button type="button" class="btn btn-secondary btn-small btn-xs move-link-down"
+                                    onclick="moveLinkRow(this, 'down')" title="Move Down">↓</button>
+                                <button type="button" class="btn btn-danger btn-small"
+                                    onclick="removeLinkRow(this)">×</button>
                             </div>
                         </div>
                         <button type="button" class="btn btn-secondary btn-small" onclick="addLinkRow()">+ Add Another
@@ -494,10 +500,55 @@
             div.innerHTML = `
                 <input type="text" name="link_text[]" placeholder="Link Text" value="${text}" required oninput="updatePreview()">
                 <input type="text" name="link_url[]" placeholder="URL" value="${url}" required>
-                <button type="button" class="btn btn-danger btn-small" onclick="this.parentElement.remove(); updatePreview();">×</button>
+                <button type="button" class="btn btn-secondary btn-small btn-xs move-link-up" onclick="moveLinkRow(this, 'up')" title="Move Up">↑</button>
+                <button type="button" class="btn btn-secondary btn-small btn-xs move-link-down" onclick="moveLinkRow(this, 'down')" title="Move Down">↓</button>
+                <button type="button" class="btn btn-danger btn-small" onclick="removeLinkRow(this)">×</button>
             `;
             container.appendChild(div);
+            updateLinkMoveButtons();
             updatePreview();
+        }
+
+        function removeLinkRow(btn) {
+            const container = document.getElementById('linksContainer');
+            if (container.querySelectorAll('.link-row').length > 1) {
+                btn.parentElement.remove();
+            } else {
+                btn.parentElement.querySelectorAll('input').forEach(i => i.value = '');
+            }
+            updateLinkMoveButtons();
+            updatePreview();
+        }
+
+        function moveLinkRow(btn, direction) {
+            const row = btn.closest('.link-row');
+            if (!row) return;
+            const container = row.parentElement;
+            if (direction === 'up' && row.previousElementSibling) {
+                container.insertBefore(row, row.previousElementSibling);
+            } else if (direction === 'down' && row.nextElementSibling) {
+                container.insertBefore(row.nextElementSibling, row);
+            }
+            updateLinkMoveButtons();
+            updatePreview();
+        }
+
+        function updateLinkMoveButtons() {
+            const rows = document.querySelectorAll('#linksContainer .link-row');
+            rows.forEach((row, index) => {
+                const upBtn = row.querySelector('.move-link-up');
+                const downBtn = row.querySelector('.move-link-down');
+                if (upBtn) {
+                    const isFirst = index === 0;
+                    upBtn.disabled = isFirst;
+                    upBtn.style.opacity = isFirst ? '0.3' : '';
+                }
+                if (downBtn) {
+                    const isLast = index === rows.length - 1;
+                    downBtn.disabled = isLast;
+                    downBtn.style.opacity = isLast ? '0.3' : '';
+                }
+            });
         }
 
         function editSystem(btn) {
@@ -727,6 +778,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             bindEvents();
+            updateLinkMoveButtons();
 
             // Init filter
             const filterInput = document.getElementById('cardFilter');
